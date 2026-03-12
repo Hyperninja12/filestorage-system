@@ -34,6 +34,29 @@ If you get **“Failed to listen on 127.0.0.1:8000 (reason: ?)”** on Windows, 
 - Change to: `variables_order = "GPCS"`
 - Save and try `php artisan serve` again.
 
+### Running so other PCs on the same network can access it
+
+1. **On the PC where the project lives**, open a terminal in the project folder and run:
+   ```bash
+   php artisan serve --host=0.0.0.0 --port=8000
+   ```
+   `0.0.0.0` means "listen on all network interfaces," so other devices on your LAN can connect.
+
+2. **Find this PC's IP address** (so others know what to type):
+   - **Windows:** Open Command Prompt or PowerShell and run: `ipconfig`  
+     Look for **IPv4 Address** under your active connection (e.g. Wi-Fi or Ethernet), e.g. `192.168.1.100`.
+   - **Example:** If the IP is `192.168.1.100`, the app URL for other PCs is: **http://192.168.1.100:8000**
+
+3. **On other PCs** (same Wi-Fi or same wired network):  
+   Open a browser and go to **http://YOUR_PC_IP:8000** (replace with the IP from step 2).
+
+4. **If other PCs cannot connect**, Windows Firewall may be blocking port 8000:
+   - Open **Windows Defender Firewall** → **Advanced settings** → **Inbound Rules**.
+   - **New Rule** → Port → TCP → Specific local ports: **8000** → Allow the connection → Name e.g. "Laravel jesproject" → Finish.
+   - Or temporarily turn off the firewall only for testing (not recommended long-term).
+
+**Notes:** The app uses SQLite on the host PC; all users see the same data. No internet is required; only the local network. Keep the terminal window open while others use the app.
+
 ---
 
 ## 3. Database

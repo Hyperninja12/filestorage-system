@@ -17,4 +17,5 @@ Route::get('/records/{record}/edit', [RecordController::class, 'edit'])->name('r
 Route::put('/records/{record}', [RecordController::class, 'update'])->name('records.update');
 Route::delete('/records/{record}', [RecordController::class, 'destroy'])->name('records.destroy');
 Route::post('/records/{record}/image', [RecordController::class, 'attachImage'])->name('records.attach-image');
+Route::delete('/records/{record}/image', [RecordController::class, 'removeImage'])->name('records.remove-image');
 Route::get('/records/{record}/image', [RecordController::class, 'image'])->name('records.image');

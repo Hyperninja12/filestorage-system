@@ -5,12 +5,17 @@
 
 @section('content')
     <div class="import-page">
+        <div class="import-hero">
+            <div class="import-hero-badge">Upload data</div>
+            <h1 class="import-hero-title">Import Excel File</h1>
+            <p class="import-hero-desc">Upload a .csv, .xlsx, or .xls file. The first row is used as headers; each following row becomes one record.</p>
+        </div>
         <div class="import-card">
             <div class="import-card-icon" aria-hidden="true">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
             </div>
-            <h1 class="import-title">Import CSV or Excel</h1>
-            <p class="import-desc">Upload a .csv, .xlsx, or .xls file. The first row is used as headers; each following row becomes one record.</p>
+            <h2 class="import-title">Choose your file</h2>
+            <p class="import-desc">Supported: .csv, .xlsx, .xls (max 10 MB)</p>
             <form id="import-form" action="{{ route('import.store') }}" method="POST" enctype="multipart/form-data" class="import-form">
                 @csrf
                 <div class="import-field">
@@ -54,24 +59,47 @@
 
 @push('styles')
 <style>
-    .import-page { position: relative; min-height: 40vh; }
+    .import-page { position: relative; min-height: 50vh; }
+    .import-hero {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .import-hero-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: rgba(99, 102, 241, 0.12);
+        color: #4f46e5;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 9999px;
+        margin-bottom: 0.75rem;
+    }
+    .import-hero-title { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; letter-spacing: -0.02em; }
+    .import-hero-desc { font-size: 0.9375rem; color: #64748b; margin: 0; max-width: 28rem; margin-left: auto; margin-right: auto; }
     .import-card {
-        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        background: #fff;
         border-radius: 1rem;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06), 0 0 0 1px rgb(226 232 240);
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
         padding: 2rem;
         max-width: 28rem;
         margin: 0 auto;
+        border: 1px solid #e2e8f0;
     }
     .import-card-icon {
-        width: 3rem;
-        height: 3rem;
+        width: 3.5rem;
+        height: 3.5rem;
         margin-bottom: 1rem;
-        color: rgb(99 102 241);
+        color: #6366f1;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        box-sizing: border-box;
     }
     .import-card-icon svg { width: 100%; height: 100%; }
-    .import-title { font-size: 1.35rem; font-weight: 600; color: rgb(30 41 59); margin-bottom: 0.5rem; }
-    .import-desc { color: rgb(100 116 139); font-size: 0.9375rem; line-height: 1.5; margin-bottom: 1.5rem; }
+    .import-title { font-size: 1.25rem; font-weight: 600; color: #1e293b; margin-bottom: 0.25rem; }
+    .import-desc { color: #64748b; font-size: 0.875rem; line-height: 1.5; margin-bottom: 1.25rem; }
     .import-form { display: flex; flex-direction: column; gap: 1.25rem; }
     .import-field { }
     .import-label { display: block; font-size: 0.875rem; font-weight: 500; color: rgb(51 65 85); margin-bottom: 0.375rem; }
@@ -88,14 +116,15 @@
     .import-file-input:focus { outline: none; box-shadow: 0 0 0 2px rgb(99 102 241); border-color: rgb(99 102 241); }
     .import-file-input::file-selector-button {
         margin-right: 0.75rem;
-        padding: 0.375rem 0.75rem;
+        padding: 0.5rem 0.875rem;
         border: 0;
-        border-radius: 0.375rem;
-        background: rgb(238 242 255);
-        color: rgb(99 102 241);
-        font-weight: 500;
+        border-radius: 0.5rem;
+        background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
+        color: #4f46e5;
+        font-weight: 600;
         cursor: pointer;
     }
+    .import-file-input::file-selector-button:hover { background: #e0e7ff; }
     .import-error { margin-top: 0.25rem; font-size: 0.875rem; color: rgb(185 28 28); }
     .import-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .import-btn {
@@ -112,10 +141,10 @@
         min-width: 6rem;
     }
     .import-btn:disabled { cursor: not-allowed; opacity: 0.8; }
-    .import-btn-primary { background: rgb(99 102 241); color: white; }
-    .import-btn-primary:hover:not(:disabled) { background: rgb(79 70 229); }
-    .import-btn-secondary { background: #fff; color: rgb(71 85 105); border-color: rgb(203 213 225); }
-    .import-btn-secondary:hover { background: rgb(248 250 252); }
+    .import-btn-primary { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3); }
+    .import-btn-primary:hover:not(:disabled) { opacity: 0.95; box-shadow: 0 4px 8px rgba(99, 102, 241, 0.35); }
+    .import-btn-secondary { background: #fff; color: #475569; border-color: #cbd5e1; }
+    .import-btn-secondary:hover { background: #f8fafc; }
     .import-btn-text { }
     .import-btn-loading { display: none; align-items: center; gap: 0.5rem; }
     .import-btn.loading .import-btn-text { display: none; }

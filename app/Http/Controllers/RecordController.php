@@ -26,6 +26,7 @@ class RecordController extends Controller
         'On Hand Value',
         'Person Responsible',
         'Office',
+        'Floor',
         'Additional Information',
         'Remarks',
     ];
@@ -37,19 +38,25 @@ class RecordController extends Controller
         if ($request->filled('search')) {
             $search = '%' . $request->search . '%';
             $ids = DB::select(
-                'SELECT id FROM import_records, json_each(import_records.row_data) WHERE json_each.value LIKE ?',
+                'SELECT DISTINCT import_records.id FROM import_records CROSS JOIN json_each(import_records.row_data) AS je WHERE je.value LIKE ?',
                 [$search]
             );
-            $query->whereIn('id', array_column($ids, 'id'));
+            $idList = array_map(fn ($row) => is_object($row) ? $row->id : $row['id'], $ids);
+            if (empty($idList)) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->whereIn('id', $idList);
+            }
         }
 
-        if ($request->filled('column') && $request->filled('value')) {
-            $column = $request->column;
-            $value = '%' . $request->value . '%';
-            $query->whereRaw(
-                'json_extract(row_data, ?) LIKE ?',
-                ['$."' . str_replace('"', '""', $column) . '"', $value]
-            );
+        if ($request->filled('floor')) {
+            $floor = '%' . $request->floor . '%';
+            $query->whereRaw('json_extract(row_data, ?) LIKE ?', ['$."Floor"', $floor]);
+        }
+
+        if ($request->filled('person_responsible')) {
+            $pr = '%' . $request->person_responsible . '%';
+            $query->whereRaw('json_extract(row_data, ?) LIKE ?', ['$."Person Responsible"', $pr]);
         }
 
         $records = $query->latest()->paginate(15)->withQueryString();
@@ -121,6 +128,15 @@ class RecordController extends Controller
         $record->update(['image_path' => $path]);
 
         return back()->with('success', 'Image attached.');
+    }
+
+    public function removeImage(ImportRecord $record)
+    {
+        if ($record->image_path) {
+            Storage::disk('public')->delete($record->image_path);
+            $record->update(['image_path' => null]);
+        }
+        return back()->with('success', 'Image removed.');
     }
 
     public function image(ImportRecord $record)

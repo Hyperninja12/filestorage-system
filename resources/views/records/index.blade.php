@@ -5,41 +5,40 @@
 
 @section('content')
     <div class="records-header">
-        <div>
+        <div class="records-header-text">
             <h1 class="records-title">Records</h1>
             <p class="records-subtitle">Search, view, and manage imported data</p>
         </div>
-        <a href="{{ route('import.create') }}" class="records-import-btn">Import CSV/Excel</a>
     </div>
 
     {{-- Search and filter card --}}
     <div class="records-search-card">
-        <form action="{{ route('records.index') }}" method="GET" class="flex flex-wrap gap-3 items-end">
-            <div class="flex-1 min-w-[200px]">
-                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search (any column)</label>
-                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Search..."
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        <div class="records-search-header">
+            <svg class="records-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+            <span>Search & filter</span>
+        </div>
+        <form action="{{ route('records.index') }}" method="GET" class="records-search-form">
+            <div class="records-search-field records-search-field-wide">
+                <label for="search" class="records-search-label">Search (any column)</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Type to search..."
+                    class="records-search-input">
             </div>
-            @if (count($headers) > 0)
-            <div class="w-40">
-                <label for="column" class="block text-sm font-medium text-gray-700 mb-1">Filter by column</label>
-                <select name="column" id="column" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
-                    <option value="">— Any —</option>
-                    @foreach ($headers as $h)
-                        <option value="{{ $h }}" {{ request('column') === $h ? 'selected' : '' }}>{{ $h }}</option>
-                    @endforeach
-                </select>
+            <div class="records-search-field">
+                <label for="floor" class="records-search-label">By Floor</label>
+                <input type="text" name="floor" id="floor" value="{{ request('floor') }}" placeholder="e.g. 1, 2, 5th"
+                    class="records-search-input">
             </div>
-            <div class="min-w-[140px]">
-                <label for="value" class="block text-sm font-medium text-gray-700 mb-1">Filter value</label>
-                <input type="text" name="value" id="value" value="{{ request('value') }}" placeholder="Value..."
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+            <div class="records-search-field">
+                <label for="person_responsible" class="records-search-label">By Person Responsible</label>
+                <input type="text" name="person_responsible" id="person_responsible" value="{{ request('person_responsible') }}" placeholder="Name or part of name"
+                    class="records-search-input">
             </div>
-            @endif
-            <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 font-medium">Search</button>
-            @if (request()->hasAny(['search', 'column', 'value']))
-                <a href="{{ route('records.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Clear</a>
-            @endif
+            <div class="records-search-buttons">
+                <button type="submit" class="records-search-btn records-search-btn-primary">Search</button>
+                @if (request()->hasAny(['search', 'floor', 'person_responsible']))
+                    <a href="{{ route('records.index') }}" class="records-search-btn records-search-btn-secondary">Clear</a>
+                @endif
+            </div>
         </form>
     </div>
 
@@ -52,36 +51,36 @@
             <a href="{{ route('import.create') }}" class="records-empty-link">Import a CSV or Excel file</a> to get started.
         </div>
     @else
-        {{-- Table wrapper: horizontal scroll so all columns fit; design applied to table --}}
+        {{-- Table wrapper: top scroll strip + body, synced so you can scroll from the top --}}
         <div class="records-table-card overflow-hidden">
-            <div class="overflow-x-auto overflow-y-visible">
-                <table class="records-table min-w-full border-collapse">
-                    <thead class="bg-slate-700 text-white sticky top-0 z-10">
+            <div class="records-table-scroll-area">
+                <div id="records-top-scroll" class="records-table-top-scroll" aria-hidden="true">
+                    <div id="records-top-scroll-inner" class="records-table-top-scroll-inner"></div>
+                </div>
+                <div id="records-table-body" class="records-table-body-wrap overflow-y-visible">
+                    <table class="records-table min-w-full border-collapse" id="records-data-table">
+                    <thead class="records-table-thead sticky top-0 z-10">
                         <tr>
+                            <th class="records-table-th records-table-th-actions">Actions</th>
                             @foreach ($headers as $h)
                                 <th class="records-table-th">{{ $h }}</th>
                             @endforeach
-                            <th class="records-table-th records-table-th-actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
                         @foreach ($records as $record)
                             <tr class="records-table-tr border-b border-gray-200 hover:bg-slate-50">
-                                @foreach ($headers as $h)
-                                    @php
-                                        $val = $record->getColumn($h);
-                                        $display = ($val !== null && $val !== '') ? Str::words($val, 8) : '—';
-                                    @endphp
-                                    <td class="records-table-td" title="{{ $val ?? '' }}">
-                                        <span class="records-table-cell">{{ $display }}</span>
-                                    </td>
-                                @endforeach
                                 <td class="records-table-td records-table-td-actions">
                                     <div class="records-table-actions">
                                         <a href="{{ route('records.show', $record) }}" class="records-table-btn records-table-btn-view">View</a>
                                         <a href="{{ route('records.edit', $record) }}" class="records-table-btn records-table-btn-edit">Edit</a>
                                         @if ($record->image_path)
                                             <button type="button" onclick="previewImage('{{ route('records.image', $record) }}')" class="records-table-btn records-table-btn-image">Image</button>
+                                            <form action="{{ route('records.remove-image', $record) }}" method="POST" class="records-table-action-form records-table-remove-image-form" onsubmit="return confirm('Remove this image?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="records-table-btn records-table-btn-remove-image" title="Remove image">×</button>
+                                            </form>
                                         @else
                                             <button type="button" onclick="document.getElementById('attach-{{ $record->id }}').click()" class="records-table-btn records-table-btn-attach">Attach</button>
                                             <form id="form-{{ $record->id }}" action="{{ route('records.attach-image', $record) }}" method="POST" enctype="multipart/form-data" class="hidden">
@@ -96,33 +95,62 @@
                                         </form>
                                     </div>
                                 </td>
+                                @foreach ($headers as $h)
+                                    @php
+                                        $val = $record->getColumn($h);
+                                        $display = ($val !== null && $val !== '') ? Str::words($val, 8) : '—';
+                                    @endphp
+                                    <td class="records-table-td" title="{{ $val ?? '' }}">
+                                        <span class="records-table-cell">{{ $display }}</span>
+                                    </td>
+                                @endforeach
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             </div>
-            <div class="px-4 py-3 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+            <div class="records-pagination">
                 {{ $records->links() }}
             </div>
         </div>
 
         {{-- Image preview modal --}}
-        <div id="image-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50" onclick="closePreview()">
-            <div class="max-w-4xl max-h-[90vh] p-4" onclick="event.stopPropagation()">
-                <img id="preview-img" src="" alt="Preview" class="max-w-full max-h-[85vh] rounded-lg shadow-xl">
-                <button type="button" onclick="closePreview()" class="mt-2 w-full py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">Close</button>
+        <div id="image-modal" class="records-modal-overlay hidden" onclick="closePreview()">
+            <div class="records-modal-box" onclick="event.stopPropagation()">
+                <img id="preview-img" src="" alt="Preview" class="records-modal-img">
+                <button type="button" onclick="closePreview()" class="records-modal-close">Close</button>
             </div>
         </div>
         <script>
             function previewImage(url) {
                 document.getElementById('preview-img').src = url;
                 document.getElementById('image-modal').classList.remove('hidden');
-                document.getElementById('image-modal').classList.add('flex');
+                document.getElementById('image-modal').classList.add('records-modal-open');
             }
             function closePreview() {
                 document.getElementById('image-modal').classList.add('hidden');
-                document.getElementById('image-modal').classList.remove('flex');
+                document.getElementById('image-modal').classList.remove('records-modal-open');
             }
+            (function() {
+                var topScroll = document.getElementById('records-top-scroll');
+                var topInner = document.getElementById('records-top-scroll-inner');
+                var bodyWrap = document.getElementById('records-table-body');
+                var table = document.getElementById('records-data-table');
+                if (!topScroll || !bodyWrap || !table) return;
+                function syncWidth() {
+                    topInner.style.width = table.scrollWidth + 'px';
+                }
+                function scrollTopFromBody() { topScroll.scrollLeft = bodyWrap.scrollLeft; }
+                function scrollBodyFromTop() { bodyWrap.scrollLeft = topScroll.scrollLeft; }
+                topScroll.addEventListener('scroll', scrollBodyFromTop);
+                bodyWrap.addEventListener('scroll', scrollTopFromBody);
+                syncWidth();
+                if (typeof ResizeObserver !== 'undefined') {
+                    new ResizeObserver(syncWidth).observe(table);
+                }
+                window.addEventListener('resize', syncWidth);
+            })();
         </script>
     @endif
 @endsection
@@ -138,28 +166,58 @@
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
-    .records-title { font-size: 1.625rem; font-weight: 600; color: rgb(30 41 59); margin: 0 0 0.25rem 0; }
-    .records-subtitle { font-size: 0.9375rem; color: rgb(100 116 139); margin: 0; }
-    .records-import-btn {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.5rem 1rem;
-        background: linear-gradient(135deg, rgb(99 102 241) 0%, rgb(79 70 229) 100%);
-        color: white;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        font-size: 0.875rem;
-        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
-    }
-    .records-import-btn:hover { opacity: 0.95; }
+    .records-header-text { }
+    .records-title { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin: 0 0 0.25rem 0; letter-spacing: -0.02em; }
+    .records-subtitle { font-size: 0.9375rem; color: #64748b; margin: 0; }
     .records-search-card {
         background: #fff;
-        border-radius: 0.75rem;
-        box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
-        border: 1px solid rgb(226 232 240);
-        padding: 1rem;
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+        border: 1px solid #e2e8f0;
+        padding: 0;
         margin-bottom: 1.5rem;
+        overflow: hidden;
     }
+    .records-search-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.25rem;
+        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        border-bottom: 1px solid #e2e8f0;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        color: #334155;
+    }
+    .records-search-icon { width: 1.25rem; height: 1.25rem; color: #6366f1; flex-shrink: 0; }
+    .records-search-form { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; padding: 1.25rem; }
+    .records-search-field { flex: 0 0 auto; }
+    .records-search-field-wide { flex: 1; min-width: 12rem; }
+    .records-search-label { display: block; font-size: 0.8125rem; font-weight: 500; color: #475569; margin-bottom: 0.25rem; }
+    .records-search-input {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        min-width: 8rem;
+    }
+    .records-search-input:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+    .records-search-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .records-search-btn { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; font-size: 0.875rem; text-decoration: none; border: 1px solid transparent; cursor: pointer; }
+    .records-search-btn-primary { background: #1e293b; color: #fff; }
+    .records-search-btn-primary:hover { background: #334155; }
+    .records-search-btn-secondary { background: #fff; color: #475569; border-color: #cbd5e1; }
+    .records-search-btn-secondary:hover { background: #f8fafc; }
+    .records-pagination { padding: 1rem 1.25rem; border-top: 1px solid #e2e8f0; background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
+    .records-modal-overlay {
+        position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center; z-index: 50;
+    }
+    .records-modal-overlay.records-modal-open { display: flex; }
+    .records-modal-box { max-width: 90vw; max-height: 90vh; padding: 1rem; }
+    .records-modal-img { max-width: 100%; max-height: 80vh; border-radius: 0.75rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4); }
+    .records-modal-close { margin-top: 1rem; width: 100%; padding: 0.625rem 1rem; background: #1e293b; color: #fff; border-radius: 0.5rem; font-weight: 500; cursor: pointer; border: 0; }
+    .records-modal-close:hover { background: #334155; }
     .records-empty {
         background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
         border-radius: 1rem;
@@ -179,21 +237,48 @@
     .records-empty-link:hover { text-decoration: underline; }
     .records-table-card {
         background: #fff;
-        border-radius: 0.75rem;
-        box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
-        border: 1px solid rgb(226 232 240);
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
     }
+    .records-table-scroll-area { }
+    .records-table-top-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: 40px;
+        background: linear-gradient(180deg, #e0e7ff 0%, #c7d2fe 100%);
+        border-bottom: 2px solid #a5b4fc;
+        flex-shrink: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    .records-table-top-scroll::-webkit-scrollbar { height: 20px; }
+    .records-table-top-scroll::-webkit-scrollbar-track { background: #c7d2fe; border-radius: 8px; }
+    .records-table-top-scroll::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 8px; }
+    .records-table-top-scroll::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
+    .records-table-top-scroll-inner { display: inline-block; min-width: 1px; height: 1px; }
+    .records-table-body-wrap {
+        overflow-x: auto;
+        overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+    }
+    .records-table-body-wrap::-webkit-scrollbar { height: 20px; }
+    .records-table-body-wrap::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 8px; }
+    .records-table-body-wrap::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 8px; }
+    .records-table-body-wrap::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
     .records-table { font-size: 0.8125rem; }
+    .records-table thead { background: linear-gradient(180deg, #475569 0%, #334155 100%); }
     .records-table-th {
-        padding: 0.5rem 0.75rem;
+        padding: 0.625rem 0.75rem;
         text-align: left;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.04em;
         white-space: nowrap;
         min-width: 5rem;
         max-width: 12rem;
-        border-bottom: 2px solid rgb(51 65 85);
+        border-bottom: none;
+        color: #f1f5f9;
     }
     .records-table-th-actions { min-width: 10rem; max-width: none; }
     .records-table-td {
@@ -243,5 +328,16 @@
     .records-table-btn-image:hover, .records-table-btn-attach:hover { background: rgb(191 219 254); }
     .records-table-btn-delete { background: rgb(254 226 226); color: rgb(153 27 27); }
     .records-table-btn-delete:hover { background: rgb(254 202 202); }
+    .records-table-remove-image-form { display: inline-block; }
+    .records-table-btn-remove-image {
+        min-width: 4.25rem;
+        padding: 0.35rem 0.5rem;
+        font-size: 1.1rem;
+        line-height: 1;
+        font-weight: 700;
+        background: rgb(254 226 226);
+        color: rgb(153 27 27);
+    }
+    .records-table-btn-remove-image:hover { background: rgb(254 202 202); }
 </style>
 @endpush
