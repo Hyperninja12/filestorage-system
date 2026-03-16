@@ -17,7 +17,7 @@ class ImportController extends Controller
     }
 
     /**
-     * Import file: first row = headers, following rows = data. Each row is normalized to the 17 canonical column names so the records table always finds values.
+     * Import file: unang row = headers, sunod nga rows = data. Normalize kada row sa 17 canonical column names aron makita sa records table.
      */
     public function store(Request $request)
     {
@@ -57,7 +57,7 @@ class ImportController extends Controller
         return redirect()->route('records.index')->with('success', $created . ' records imported successfully.');
     }
 
-    /** Skip blank rows (e.g. empty line after header in CICTMO PAR CSV). */
+    /** Laktawi ang blank rows (pananglitan walay sulod nga line human sa header). */
     private function isRowEmpty(array $row): bool
     {
         foreach ($row as $v) {
@@ -68,7 +68,7 @@ class ImportController extends Controller
         return true;
     }
 
-    /** Alternate header names from files that map to canonical column names (e.g. CICTMO uses "Descriptions"). */
+    /** Laing ngalan sa header sa file nga i-map sa canonical column names. */
     private function getHeaderAliases(): array
     {
         return [
@@ -77,7 +77,7 @@ class ImportController extends Controller
     }
 
     /**
-     * Map file row keys to the 17 canonical column names (case-insensitive + trim/BOM + trailing dot + aliases).
+     * I-map ang keys sa file row ngadto sa 17 canonical column names (walay labot case, trim/BOM, trailing dot, ug aliases).
      */
     private function normalizeRowToCanonical(array $row, array $canonical): array
     {
@@ -100,7 +100,7 @@ class ImportController extends Controller
             }
             $normalized[$col] = $value;
         }
-        // CICTMO PAR: Description column is often empty; the long text is in Subcategory. Use as fallback.
+        // Kung walay Description, gamita ang Subcategory nga fallback.
         $desc = $normalized['Description'] ?? null;
         if (($desc === null || trim((string) $desc) === '') && ! empty(trim((string) ($normalized['Subcategory'] ?? '')))) {
             $normalized['Description'] = $normalized['Subcategory'];
@@ -109,7 +109,7 @@ class ImportController extends Controller
     }
 
     /**
-     * CSV: row 0 = headers, row 1+ = data. Records stored with header names as keys.
+     * CSV: row 0 = headers, row 1 pataas = data. I-store ang records gamit ang header names nga keys.
      */
     private function parseCsv($file): array
     {
@@ -135,7 +135,7 @@ class ImportController extends Controller
     }
 
     /**
-     * Excel: row 0 = headers, row 1+ = data. Records stored with header names as keys.
+     * Excel: row 0 = headers, row 1 pataas = data. I-store ang records gamit ang header names nga keys.
      */
     private function parseExcel($file): array
     {
@@ -162,7 +162,7 @@ class ImportController extends Controller
         return ['headers' => $headers, 'rows' => $result];
     }
 
-    /** Trim and strip UTF-8 BOM from header cell so keys match on display. */
+    /** Trim ug tangtangon ang UTF-8 BOM sa header cell aron mag-match ang keys sa display. */
     private function normalizeHeaderCell(string $cell): string
     {
         $cell = trim($cell);

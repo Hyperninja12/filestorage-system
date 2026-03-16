@@ -12,7 +12,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     @endif
     <style> body { font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; } </style>
-    {{-- Page-specific styles (e.g. records table design) --}}
+    {{-- Mga style nga specific sa page (pananglitan records table design) --}}
     @stack('styles')
 </head>
 <body class="app-body text-gray-900 min-h-screen">

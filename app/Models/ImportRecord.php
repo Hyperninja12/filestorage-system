@@ -7,15 +7,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ImportRecord extends Model
 {
-    protected $fillable = ['import_batch_id', 'row_data', 'image_path'];
+    protected $fillable = ['import_batch_id', 'row_data', 'image_paths'];
 
     protected $casts = [
         'row_data' => 'array',
+        'image_paths' => 'array',
     ];
 
+    /** Maximum nga numero sa images kada record (2 lang aron dako ang space sa print). */
+    public const MAX_IMAGES = 2;
+
+    /** Kuhaa tanang image paths (1–2). Return array sa paths, pwede walay sulod. */
+    public function getImagePaths(): array
+    {
+        $paths = $this->image_paths ?? [];
+        if (! is_array($paths)) {
+            return [];
+        }
+        return array_slice(array_values($paths), 0, self::MAX_IMAGES);
+    }
+
     /**
-     * Mutator: sanitize row_data to valid UTF-8 before saving so JSON encoding never
-     * fails with "Malformed UTF-8" (e.g. when editing records or re-saving).
+     * Mutator: i-sanitize ang row_data ngadto sa valid UTF-8 sa wala pa i-save aron dili ma-fail ang JSON encoding.
      */
     protected function setRowDataAttribute(mixed $value): void
     {
@@ -23,7 +36,7 @@ class ImportRecord extends Model
     }
 
     /**
-     * Recursively ensure strings in row_data are valid UTF-8; leave numbers/null as-is.
+     * Sigurohon nga valid UTF-8 ang tanang string sa row_data (recursive); number ug null biyai lang.
      */
     private function sanitizeRowDataForJson(mixed $value): mixed
     {
@@ -43,7 +56,7 @@ class ImportRecord extends Model
     }
 
     /**
-     * Get value for a column by key; exact match, then case-insensitive, then trim/BOM-normalized match.
+     * Kuhaa ang value sa column gamit ang key; exact match una, dayon case-insensitive, dayon trim/BOM-normalized match.
      */
     public function getColumn(string $key): mixed
     {
@@ -63,7 +76,7 @@ class ImportRecord extends Model
         return null;
     }
 
-    /** Strip BOM, trim, and normalize so "Account Code", "Qty.", "Po No." match our column names. */
+    /** Tangtanga ang BOM, trim, ug normalize aron mag-match ang "Account Code", "Qty.", "Po No." sa atong column names. */
     public static function normalizeColumnKey(string $key): string
     {
         $key = trim($key);

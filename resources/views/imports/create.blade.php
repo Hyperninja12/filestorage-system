@@ -1,4 +1,4 @@
-{{-- Import upload form: single file input and submit; loading state on submit. --}}
+{{-- Form sa pag-upload ug import: usa ka file input ug submit; loading state kung mag-submit. --}}
 @extends('layouts.app')
 
 @section('title', 'Import CSV or Excel')
@@ -38,7 +38,7 @@
                 </div>
             </form>
         </div>
-        {{-- Full-page loading overlay: hidden until form is submitted, then shown while file uploads and server processes --}}
+        {{-- Loading overlay sa tibuok page: nakatago hangtod ma-submit ang form, dayon ipakita samtang nag-upload ug nag-process ang server --}}
         <div id="import-loading-overlay" class="import-loading-overlay import-loading-hidden" aria-hidden="true">
             <div class="import-loading-box">
                 <span class="import-spinner import-spinner-lg"></span>

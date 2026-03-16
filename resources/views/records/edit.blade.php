@@ -1,4 +1,4 @@
-{{-- Edit record form: back link, card with header and form table. --}}
+{{-- Form sa pag-edit sa record: back link, card nga naay header ug form table. --}}
 @extends('layouts.app')
 
 @section('title', 'Edit Record #' . $record->id)
@@ -25,7 +25,7 @@
                                         <label for="field-{{ Str::slug($col) }}">{{ $col }}</label>
                                     </th>
                                     <td class="edit-table-td">
-                                        <input type="text" name="{{ $col }}" id="field-{{ Str::slug($col) }}" value="{{ old($col, $record->getColumn($col)) }}"
+                                        <input type="text" name="{{ $col }}" id="field-{{ Str::slug($col) }}" value="{{ old($col, old(str_replace(' ', '_', $col), $record->getColumn($col))) }}"
                                             placeholder="—"
                                             class="edit-table-input">
                                         @error($col)
@@ -37,17 +37,21 @@
                         </tbody>
                     </table>
                 </div>
-                @if ($record->image_path)
+                @if (count($record->getImagePaths()) > 0)
                 <div class="record-edit-image-section">
-                    <div class="record-edit-image-header">
-                        <span class="record-edit-image-label">Attached image</span>
-                        <form action="{{ route('records.remove-image', $record) }}" method="POST" class="record-edit-image-remove-form" onsubmit="return confirm('Remove this image?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="record-edit-image-remove-btn" title="Remove image" aria-label="Remove image">× Remove</button>
-                        </form>
+                    <span class="record-edit-image-label">Attached images ({{ count($record->getImagePaths()) }}/2)</span>
+                    <div class="record-edit-image-grid">
+                        @foreach ($record->getImagePaths() as $idx => $path)
+                            <div class="record-edit-image-item">
+                                <img src="{{ route('records.image', [$record, $idx]) }}" alt="Image {{ $idx + 1 }}" class="record-edit-image-thumb">
+                                <form action="{{ route('records.remove-image', [$record, $idx]) }}" method="POST" class="record-edit-image-remove-form" onsubmit="return confirm('Remove this image?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="record-edit-image-remove-btn" title="Remove image" aria-label="Remove image">× Remove</button>
+                                </form>
+                            </div>
+                        @endforeach
                     </div>
-                    <img src="{{ route('records.image', $record) }}" alt="Attached" class="record-edit-image-thumb">
                 </div>
                 @endif
                 <div class="record-edit-footer">
@@ -83,9 +87,10 @@
         border-top: 1px solid #e2e8f0;
         background: #fafafa;
     }
-    .record-edit-image-header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem; }
-    .record-edit-image-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
-    .record-edit-image-remove-form { display: inline-block; }
+    .record-edit-image-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.75rem; }
+    .record-edit-image-grid { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .record-edit-image-item { position: relative; }
+    .record-edit-image-remove-form { margin-top: 0.25rem; }
     .record-edit-image-remove-btn {
         display: inline-flex;
         align-items: center;

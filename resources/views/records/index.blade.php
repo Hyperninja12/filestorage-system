@@ -1,4 +1,4 @@
-{{-- Records list: search/filter bar, then data table with all columns and styled design. Empty cells use placeholder. --}}
+{{-- Lista sa records: search/filter bar, dayon data table nga naay tanang columns. Empty cells placeholder. --}}
 @extends('layouts.app')
 
 @section('title', 'Records')
@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    {{-- Search and filter card --}}
+    {{-- Card para sa search ug filter --}}
     <div class="records-search-card">
         <div class="records-search-header">
             <svg class="records-search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
@@ -51,7 +51,7 @@
             <a href="{{ route('import.create') }}" class="records-empty-link">Import a CSV or Excel file</a> to get started.
         </div>
     @else
-        {{-- Table wrapper: top scroll strip + body, synced so you can scroll from the top --}}
+        {{-- Table wrapper: top scroll strip ug body, synced aron makascroll gikan sa taas --}}
         <div class="records-table-card overflow-hidden">
             <div class="records-table-scroll-area">
                 <div id="records-top-scroll" class="records-table-top-scroll" aria-hidden="true">
@@ -74,14 +74,18 @@
                                     <div class="records-table-actions">
                                         <a href="{{ route('records.show', $record) }}" class="records-table-btn records-table-btn-view">View</a>
                                         <a href="{{ route('records.edit', $record) }}" class="records-table-btn records-table-btn-edit">Edit</a>
-                                        @if ($record->image_path)
-                                            <button type="button" onclick="previewImage('{{ route('records.image', $record) }}')" class="records-table-btn records-table-btn-image">Image</button>
-                                            <form action="{{ route('records.remove-image', $record) }}" method="POST" class="records-table-action-form records-table-remove-image-form" onsubmit="return confirm('Remove this image?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="records-table-btn records-table-btn-remove-image" title="Remove image">×</button>
-                                            </form>
-                                        @else
+                                        @php $imgPaths = $record->getImagePaths(); $imgCount = count($imgPaths); @endphp
+                                        @if ($imgCount > 0)
+                                            <button type="button" onclick="previewImage('{{ route('records.image', [$record, 0]) }}')" class="records-table-btn records-table-btn-image">{{ $imgCount > 1 ? 'Images (' . $imgCount . ')' : 'Image' }}</button>
+                                            @if ($imgCount > 0)
+                                                <form action="{{ route('records.remove-image', [$record, 0]) }}" method="POST" class="records-table-action-form records-table-remove-image-form" onsubmit="return confirm('Remove first image?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="records-table-btn records-table-btn-remove-image" title="Remove first image">×</button>
+                                                </form>
+                                            @endif
+                                        @endif
+                                        @if ($imgCount < 2)
                                             <button type="button" onclick="document.getElementById('attach-{{ $record->id }}').click()" class="records-table-btn records-table-btn-attach">Attach</button>
                                             <form id="form-{{ $record->id }}" action="{{ route('records.attach-image', $record) }}" method="POST" enctype="multipart/form-data" class="hidden">
                                                 @csrf
@@ -98,7 +102,7 @@
                                 @foreach ($headers as $h)
                                     @php
                                         $val = $record->getColumn($h);
-                                        $display = ($val !== null && $val !== '') ? Str::words($val, 8) : '—';
+                                        $display = ($val !== null && $val !== '') ? Str::words($val, 40) : '—';
                                     @endphp
                                     <td class="records-table-td" title="{{ $val ?? '' }}">
                                         <span class="records-table-cell">{{ $display }}</span>
@@ -115,7 +119,7 @@
             </div>
         </div>
 
-        {{-- Image preview modal --}}
+        {{-- Modal para sa image preview --}}
         <div id="image-modal" class="records-modal-overlay hidden" onclick="closePreview()">
             <div class="records-modal-box" onclick="event.stopPropagation()">
                 <img id="preview-img" src="" alt="Preview" class="records-modal-img">
@@ -152,11 +156,15 @@
                 window.addEventListener('resize', syncWidth);
             })();
         </script>
+
+
+
+
     @endif
 @endsection
 
 @push('styles')
-{{-- Records page and table design --}}
+{{-- Design sa records page ug table --}}
 <style>
     .records-header {
         display: flex;
@@ -292,7 +300,7 @@
     .records-table-td-actions { min-width: 10rem; max-width: none; }
     .records-table-cell {
         display: block;
-        max-height: 3.5em;
+        max-height: 6em;
         overflow: hidden;
         text-overflow: ellipsis;
         line-height: 1.25;

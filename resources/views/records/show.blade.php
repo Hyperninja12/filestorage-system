@@ -1,4 +1,4 @@
-{{-- Record detail: back link, card with header and data table, image section. --}}
+{{-- Detail sa record: back link, card nga naay header ug data table, image section. --}}
 @extends('layouts.app')
 
 @section('title', 'Record #' . $record->id)
@@ -14,13 +14,15 @@
                 <h1 class="record-detail-title">Record #{{ $record->id }}</h1>
                 <div class="record-detail-actions">
                     <a href="{{ route('records.edit', $record) }}" class="record-detail-btn record-detail-btn-primary">Edit</a>
-                    @if ($record->image_path)
-                        <button type="button" onclick="previewImage('{{ route('records.image', $record) }}')" class="record-detail-btn record-detail-btn-secondary">Preview image</button>
-                    @else
+                    <a href="{{ route('records.print', $record) }}" target="_blank" class="record-detail-btn record-detail-btn-secondary">Print</a>
+                    @if (count($record->getImagePaths()) > 0)
+                        <button type="button" onclick="previewImage('{{ route('records.image', [$record, 0]) }}')" class="record-detail-btn record-detail-btn-secondary">Preview images</button>
+                    @endif
+                    @if (count($record->getImagePaths()) < 2)
                         <form action="{{ route('records.attach-image', $record) }}" method="POST" enctype="multipart/form-data" class="inline" id="attach-form">
                             @csrf
                             <input type="file" name="image" accept="image/*" id="attach-file" class="hidden" onchange="this.form.submit()">
-                            <button type="button" onclick="document.getElementById('attach-file').click()" class="record-detail-btn record-detail-btn-secondary">Attach image</button>
+                            <button type="button" onclick="document.getElementById('attach-file').click()" class="record-detail-btn record-detail-btn-secondary">Attach image ({{ count($record->getImagePaths()) }}/2)</button>
                         </form>
                     @endif
                     <form action="{{ route('records.destroy', $record) }}" method="POST" class="inline" onsubmit="return confirm('Delete this record?');">
@@ -48,17 +50,21 @@
                 </table>
             </div>
 
-            @if ($record->image_path)
+            @if (count($record->getImagePaths()) > 0)
                 <div class="record-detail-image-section">
-                    <div class="record-detail-image-header">
-                        <p class="record-detail-image-label">Attached image</p>
-                        <form action="{{ route('records.remove-image', $record) }}" method="POST" class="record-detail-image-remove-form" onsubmit="return confirm('Remove this image?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="record-detail-image-remove-btn" title="Remove image" aria-label="Remove image">×</button>
-                        </form>
+                    <p class="record-detail-image-label">Attached images ({{ count($record->getImagePaths()) }}/2)</p>
+                    <div class="record-detail-image-grid">
+                        @foreach ($record->getImagePaths() as $idx => $path)
+                            <div class="record-detail-image-item">
+                                <img src="{{ route('records.image', [$record, $idx]) }}" alt="Image {{ $idx + 1 }}" class="record-detail-image">
+                                <form action="{{ route('records.remove-image', [$record, $idx]) }}" method="POST" class="record-detail-image-remove-form" onsubmit="return confirm('Remove this image?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="record-detail-image-remove-btn" title="Remove image" aria-label="Remove image">×</button>
+                                </form>
+                            </div>
+                        @endforeach
                     </div>
-                    <img src="{{ route('records.image', $record) }}" alt="Attached" class="record-detail-image">
                 </div>
             @endif
         </div>
@@ -123,9 +129,10 @@
     .record-detail-btn-danger:hover { background: #fecaca; }
     .record-detail-body { overflow-x: auto; }
     .record-detail-image-section { padding: 1.5rem; border-top: 1px solid #e2e8f0; background: #fafafa; }
-    .record-detail-image-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.75rem; }
-    .record-detail-image-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
-    .record-detail-image-remove-form { display: inline-block; }
+    .record-detail-image-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 0.75rem 0; }
+    .record-detail-image-grid { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .record-detail-image-item { position: relative; display: inline-block; }
+    .record-detail-image-remove-form { position: absolute; top: 0.5rem; right: 0.5rem; }
     .record-detail-image-remove-btn {
         display: inline-flex; align-items: center; justify-content: center;
         width: 1.75rem; height: 1.75rem;
@@ -135,7 +142,7 @@
         transition: background 0.15s, color 0.15s;
     }
     .record-detail-image-remove-btn:hover { background: #fecaca; color: #991b1b; }
-    .record-detail-image { border-radius: 0.5rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); max-width: 20rem; max-height: 16rem; object-fit: contain; }
+    .record-detail-image { border-radius: 0.5rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); max-width: 20rem; max-height: 16rem; object-fit: contain; display: block; }
     .detail-table { font-size: 0.875rem; }
     .detail-table-th {
         width: 12rem;

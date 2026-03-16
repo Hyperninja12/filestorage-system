@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Storage;
 class ClearImportDataCommand extends Command
 {
     /**
-     * Command signature: run with "php artisan imports:clear"
+     * Command: dagan "php artisan imports:clear"
      */
-    protected $signature = 'imports:clear {--force : Skip confirmation}';
+    protected $signature = 'imports:clear {--force : Laktawi ang confirmation}';
 
     /**
-     * Deletes all imported records, batches, and attached images from storage.
+     * Papason tanang imported records, batches, ug attached images sa storage.
      */
-    protected $description = 'Delete all import data (records, batches, and attached images)';
+    protected $description = 'Papason tanang import data (records, batches, ug attached images)';
 
     public function handle(): int
     {
@@ -32,8 +32,8 @@ class ClearImportDataCommand extends Command
         $batchCount = ImportBatch::count();
 
         foreach (ImportRecord::all() as $record) {
-            if ($record->image_path) {
-                Storage::disk('public')->delete($record->image_path);
+            foreach ($record->getImagePaths() as $path) {
+                Storage::disk('public')->delete($path);
             }
             $record->delete();
         }
