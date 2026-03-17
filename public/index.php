@@ -3,6 +3,15 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
+// #region agent log
+$__log = function () {
+    $path = __DIR__ . '/../debug-95891a.log';
+    $line = json_encode(['sessionId' => '95891a', 'hypothesisId' => 'E', 'location' => 'public/index.php', 'message' => 'request_received', 'data' => ['uri' => $_SERVER['REQUEST_URI'] ?? ''], 'timestamp' => (int)(microtime(true) * 1000)]) . "\n";
+    @file_put_contents($path, $line, FILE_APPEND);
+};
+$__log();
+// #endregion
+
 define('LARAVEL_START', microtime(true));
 
 // Determine if the application is in maintenance mode...

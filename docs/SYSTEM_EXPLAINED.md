@@ -49,17 +49,28 @@ To use **this PC as a server** so other devices on your network (or only this PC
 1. **Same as above, but bind to all interfaces:**  
    `php artisan serve --host=0.0.0.0 --port=8000`  
    - On this PC: **http://127.0.0.1:8000**  
-   - From other devices: **http://YOUR_PC_IP:8000** (e.g. `http://192.168.1.5:8000`). Find your IP with `ipconfig` (Windows) or `ip a` (Linux).
+   - From other devices: **http://YOUR_PC_IP:8000** (e.g. `http://192.168.8.102:8000`). Find your IP with `ipconfig` (Windows) or `ip a` (Linux).
 
 2. **Keep it running with PM2** (needs Node.js installed):  
    - `npm install -g pm2`  
    - In the project folder: `pm2 start ecosystem.config.cjs`  
-   - Optional: `pm2 save` then `pm2 startup` so it starts when the PC boots.
+   - PM2 will **auto-restart** the app if it crashes.  
+   - **Start when Windows boots:**  
+     - Run once: `pm2 save` (saves the current process list).  
+     - **Option A (recommended):** `npm install -g pm2-windows-startup` then `pm2-startup install`. After each reboot, your saved app will start automatically.  
+     - **Option B:** Put **`pm2-resurrect-on-boot.bat`** (in the project folder) in your Windows Startup folder so it runs at login: press `Win+R`, type `shell:startup`, Enter, then copy or shortcut the batch file there.
 
 3. **Without PM2:**  
    Double‑click **`start-server.bat`** in the project folder (or run it from a terminal). It starts the server on `0.0.0.0:8000`; close the window to stop.
 
 No internet is required; everything runs on your local network (or only on this machine).
+
+**Can't access the system?**  
+- **On this PC:** Open **http://127.0.0.1:8000** (or **http://localhost:8000**). Don’t use the PC’s LAN IP on the same machine if you already use localhost.  
+- **From another device:** Open **http://YOUR_PC_IP:8000** (e.g. `http://192.168.8.102:8000`). Find the PC’s IP with `ipconfig` on the server PC.  
+- **Connection refused / page won’t load:** (1) Check that jesproject is running: `pm2 list` and `pm2 logs jesproject`. (2) If you use the PC’s IP from another device, **From another device (e.g. 192.168.8.102:8000):** Windows Firewall often blocks port 8000. Right‑click **`allow-port-8000-firewall.bat`** in the project folder → **Run as administrator** (once). Or in an **Admin** PowerShell: `netsh advfirewall firewall add rule name="JES Project (port 8000)" dir=in action=allow protocol=TCP localport=8000`.  
+- **Unlock screen:** Use the password from **`.env`** (`SYSTEM_PASSWORD=...`). If you change it, run `php artisan config:clear`.  
+- **Unlock works but then it asks for password again:** Use **one URL for the whole session** (e.g. always http://127.0.0.1:8000 on this PC, or always http://PC_IP:8000 from another device). If you mix localhost and IP, the session cookie from one doesn’t apply to the other.
 
 ---
 
