@@ -42,6 +42,25 @@ The home page is the **Records** list. From there you can go to **Import CSV/Exc
 
 *If the server won’t start on Windows,* check PHP’s `variables_order` in `php.ini` (see `docs/DATA_IMPORT_MANUAL.md`).
 
+### Running as a server (offline / this PC as server)
+
+To use **this PC as a server** so other devices on your network (or only this PC, offline) can open the app:
+
+1. **Same as above, but bind to all interfaces:**  
+   `php artisan serve --host=0.0.0.0 --port=8000`  
+   - On this PC: **http://127.0.0.1:8000**  
+   - From other devices: **http://YOUR_PC_IP:8000** (e.g. `http://192.168.1.5:8000`). Find your IP with `ipconfig` (Windows) or `ip a` (Linux).
+
+2. **Keep it running with PM2** (needs Node.js installed):  
+   - `npm install -g pm2`  
+   - In the project folder: `pm2 start ecosystem.config.cjs`  
+   - Optional: `pm2 save` then `pm2 startup` so it starts when the PC boots.
+
+3. **Without PM2:**  
+   Double‑click **`start-server.bat`** in the project folder (or run it from a terminal). It starts the server on `0.0.0.0:8000`; close the window to stop.
+
+No internet is required; everything runs on your local network (or only on this machine).
+
 ---
 
 ## 4. What can users do? (Features)

@@ -82,7 +82,6 @@ class ImportController extends Controller
     private function normalizeRowToCanonical(array $row, array $canonical): array
     {
         $normalized = [];
-        $rowValues = array_values($row);
         $aliases = $this->getHeaderAliases();
         foreach ($canonical as $index => $col) {
             $value = null;
@@ -95,9 +94,7 @@ class ImportController extends Controller
                     break;
                 }
             }
-            if ($value === null && array_key_exists($index, $rowValues)) {
-                $value = $rowValues[$index];
-            }
+            // Ayaw gamita ang value sa index kung walay matching header — aron Floor ug uban nga wala sa file dili makakuha ug sayop nga value (e.g. 1).
             $normalized[$col] = $value;
         }
         // Kung walay Description, gamita ang Subcategory nga fallback.

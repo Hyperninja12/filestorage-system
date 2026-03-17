@@ -16,12 +16,22 @@
     @stack('styles')
 </head>
 <body class="app-body text-gray-900 min-h-screen">
+    <div class="app-loading hidden" id="app-loading">
+        <div class="app-loading-content">
+            <div class="app-loading-spinner"></div>
+            <div class="app-loading-text">Loading...</div>
+        </div>
+    </div>
     <nav class="app-nav">
         <div class="app-nav-inner">
             <a href="{{ route('records.index') }}" class="app-nav-brand">Data Import</a>
             <div class="app-nav-links">
                 <a href="{{ route('records.index') }}" class="app-nav-link app-nav-link-records">Records</a>
                 <a href="{{ route('import.create') }}" class="app-nav-link app-nav-link-import">Import CSV/Excel</a>
+                <form action="{{ route('lock') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="app-nav-link app-nav-link-lock">Lock system</button>
+                </form>
             </div>
         </div>
     </nav>
@@ -35,7 +45,7 @@
         @yield('content')
     </main>
     <style>
-        .app-body { background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%); min-height: 100vh; }
+        .app-body { background: #E8F6F3; min-height: 100vh; }
         .app-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(226,232,240,0.8); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
         .app-nav-inner { max-width: 72rem; margin: 0 auto; padding: 0.875rem 1rem; display: flex; align-items: center; justify-content: space-between; }
         .app-nav-brand { font-size: 1.125rem; font-weight: 600; color: #1e293b; }
@@ -64,6 +74,8 @@
             box-shadow: 0 1px 2px rgba(99, 102, 241, 0.3);
         }
         .app-nav-link-import:hover { background: linear-gradient(135deg, #5558e3 0%, #4338ca 100%); box-shadow: 0 2px 4px rgba(99, 102, 241, 0.4); }
+        .app-nav-link-lock { background: #64748b; color: #fff; border: 1px solid #475569; }
+        .app-nav-link-lock:hover { background: #475569; color: #fff; }
         .app-main { max-width: 72rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
         .app-alert { margin-bottom: 1rem; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; }
         .app-alert-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
@@ -85,6 +97,32 @@
         }
         .app-back-btn:hover { background: #e0e7ff; border-color: #a5b4fc; color: #3730a3; }
         .app-back-btn svg { flex-shrink: 0; }
+        .app-loading { position: fixed; inset: 0; background: rgba(232, 246, 243, 0.92); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .app-loading.hidden { display: none; }
+        .app-loading-content { text-align: center; }
+        .app-loading-spinner { width: 2.5rem; height: 2.5rem; border: 3px solid #e2e8f0; border-top-color: #0ea5e9; border-radius: 50%; animation: app-spin 0.8s linear infinite; margin: 0 auto 1rem; }
+        .app-loading-text { font-size: 0.9375rem; font-weight: 600; color: #334155; }
+        @keyframes app-spin { to { transform: rotate(360deg); } }
     </style>
+    <script>
+        (function() {
+            var loading = document.getElementById('app-loading');
+            if (!loading) return;
+            var show = function() { loading.classList.remove('hidden'); };
+            document.body.addEventListener('click', function(e) {
+                var a = e.target.closest('a[href]');
+                if (a && a.href && a.target !== '_blank' && !a.href.startsWith('javascript:')) {
+                    try {
+                        var url = new URL(a.href);
+                        if (url.origin === location.origin) show();
+                    } catch (_) {}
+                }
+            });
+            document.body.addEventListener('submit', function(e) {
+                var form = e.target;
+                if (form && form.tagName === 'FORM' && !form.target) show();
+            });
+        })();
+    </script>
 </body>
 </html>
