@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ImportRecord extends Model
 {
-    protected $fillable = ['import_batch_id', 'row_data', 'image_paths'];
+    protected $fillable = ['import_batch_id', 'row_no_in_batch', 'row_data', 'image_paths'];
 
     protected $casts = [
         'row_data' => 'array',
@@ -33,6 +33,18 @@ class ImportRecord extends Model
     protected function setRowDataAttribute(mixed $value): void
     {
         $this->attributes['row_data'] = json_encode($this->sanitizeRowDataForJson($value));
+    }
+
+    /**
+     * Encode row_data for raw insert (same sanitization as the mutator; used for fast bulk import).
+     *
+     * @param  array<string, mixed>  $value
+     */
+    public static function encodeRowDataForDatabase(array $value): string
+    {
+        $model = new static;
+
+        return json_encode($model->sanitizeRowDataForJson($value), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -95,5 +107,11 @@ class ImportRecord extends Model
         $data = $this->row_data ?? [];
         $data[$key] = $value;
         $this->row_data = $data;
+    }
+
+    /** Display number that restarts per import batch; fallback to DB id for legacy rows. */
+    public function getDisplayNumber(): int
+    {
+        return $this->row_no_in_batch ?? $this->id;
     }
 }

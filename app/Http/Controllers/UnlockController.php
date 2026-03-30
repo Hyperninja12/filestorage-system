@@ -74,7 +74,9 @@ class UnlockController extends Controller
 
         session(['system_unlocked' => true]);
 
-        return redirect()->intended('/');
+        // So the Records page can play a short "unlock" transition animation.
+        // (Home '/' already redirects to Records, so we redirect directly here.)
+        return redirect()->route('records.index')->with('just_unlocked', true);
     }
 
     /**

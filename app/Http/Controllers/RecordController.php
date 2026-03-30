@@ -2,13 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ImportBatch;
 use App\Models\ImportRecord;
+use App\Support\CashFormatter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class RecordController extends Controller
 {
+    /** Filename used for the batch that holds manually added records. */
+    public const MANUAL_BATCH_FILENAME = 'Manual entries';
+
+    /** Unit Value threshold: PAR = 50,000 and up, ICS = below 50,000. */
+    public const PAR_ICS_THRESHOLD = 50000;
+
+    /** Columns that may be left empty when manually adding a record (all others are required on create). */
+    public const MANUAL_CREATE_OPTIONAL_COLUMNS = [
+        'Subcategory',
+        'Area Location',
+    ];
+
     /** Mga column sa table (fixed) para sa PPE report, sunod sa display. Gamit sa index, show, ug edit views. */
     public const TABLE_COLUMNS = [
         'Account Code',
@@ -26,7 +41,6 @@ class RecordController extends Controller
         'On Hand Value',
         'Person Responsible',
         'Office',
-        'Floor',
         'Area Location',
         'Additional Information',
         'Remarks',
@@ -50,19 +64,19 @@ class RecordController extends Controller
             }
         }
 
-        if ($request->filled('floor')) {
-            $floor = '%' . $request->floor . '%';
-            $query->whereRaw('json_extract(row_data, ?) LIKE ?', ['$."Floor"', $floor]);
-        }
-
         if ($request->filled('person_responsible')) {
             $pr = '%' . $request->person_responsible . '%';
             $query->whereRaw('json_extract(row_data, ?) LIKE ?', ['$."Person Responsible"', $pr]);
         }
 
+        $type = $request->get('type', 'all');
+        if ($type === 'par' || $type === 'ics') {
+            $query->whereRaw(self::unitValueRawCondition($type));
+        }
+
         $records = $query->oldest()->paginate(15)->withQueryString();
         $headers = self::TABLE_COLUMNS;
-        return view('records.index', compact('records', 'headers'));
+        return view('records.index', compact('records', 'headers', 'type'));
     }
 
     public function show(ImportRecord $record)
@@ -70,6 +84,40 @@ class RecordController extends Controller
         $record->load('importBatch');
         $columns = self::TABLE_COLUMNS;
         return view('records.show', compact('record', 'columns'));
+    }
+
+    /**
+     * Show form to add a new record manually (no import file).
+     */
+    public function create()
+    {
+        $columns = self::TABLE_COLUMNS;
+        $manualCreateOptionalColumns = self::MANUAL_CREATE_OPTIONAL_COLUMNS;
+
+        return view('records.create', compact('columns', 'manualCreateOptionalColumns'));
+    }
+
+    /**
+     * Store a new record from the manual-add form. Uses a dedicated "Manual entries" batch.
+     */
+    public function store(Request $request)
+    {
+        $batch = ImportBatch::firstOrCreate(
+            ['filename' => self::MANUAL_BATCH_FILENAME],
+            ['headers' => self::TABLE_COLUMNS]
+        );
+
+        $data = $this->validatedRecordData($request, requireAllFieldsForCreate: true);
+        $nextRowNo = ((int) ImportRecord::where('import_batch_id', $batch->id)->max('row_no_in_batch')) + 1;
+
+        $record = ImportRecord::create([
+            'import_batch_id' => $batch->id,
+            'row_no_in_batch' => $nextRowNo,
+            'row_data' => $data,
+            'image_paths' => [],
+        ]);
+
+        return redirect()->route('records.show', $record)->with('success', 'Record added.');
     }
 
     public function edit(ImportRecord $record)
@@ -86,15 +134,11 @@ class RecordController extends Controller
      */
     public function update(Request $request, ImportRecord $record)
     {
+        $validatedData = $this->validatedRecordData($request);
         $data = $record->row_data ?? [];
+
         foreach (self::TABLE_COLUMNS as $col) {
-            $underscoreCol = str_replace(' ', '_', $col);
-            $hasField = $request->has($col) || $request->has($underscoreCol);
-            if (! $hasField) {
-                continue;
-            }
-            $value = $request->input($col) ?? $request->input($underscoreCol);
-            $value = $value === null ? '' : trim((string) $value);
+            $value = $validatedData[$col] ?? null;
             $found = false;
             foreach (array_keys($data) as $storedKey) {
                 if (strcasecmp(ImportRecord::normalizeColumnKey($storedKey), ImportRecord::normalizeColumnKey($col)) === 0) {
@@ -107,17 +151,20 @@ class RecordController extends Controller
                 $data[$col] = $value;
             }
         }
+
         $record->update(['row_data' => $data]);
-        return redirect()->route('records.index')->with('success', 'Record updated.');
+        return redirect()->route('records.index', $this->recordsListQuery($request))
+            ->with('success', 'Record updated.');
     }
 
-    public function destroy(ImportRecord $record)
+    public function destroy(Request $request, ImportRecord $record)
     {
         foreach ($record->getImagePaths() as $path) {
             Storage::disk('public')->delete($path);
         }
         $record->delete();
-        return redirect()->route('records.index')->with('success', 'Record deleted.');
+        return redirect()->route('records.index', $this->recordsListQuery($request))
+            ->with('success', 'Record deleted.');
     }
 
     public function attachImage(Request $request, ImportRecord $record)
@@ -184,15 +231,14 @@ class RecordController extends Controller
             'date_of_purchase' => $datePurchase ? $this->formatDateForPrint($datePurchase) : '—',
             'property_no' => $record->getColumn('Property No.') ?: '—',
             'po_no' => $record->getColumn('PO No.') ?: '—',
-            'unit_value' => $unitValue !== null && $unitValue !== '' ? $this->formatNumberForPrint($unitValue, true) : '—',
+            'unit_value' => CashFormatter::formatOrPlaceholder($unitValue),
+            'on_hand_value' => CashFormatter::formatOrPlaceholder($record->getColumn('On Hand Value')),
             'qty' => $this->formatQtyForPrint($qty, $unit),
             'person_responsible' => $record->getColumn('Person Responsible') ?: '—',
             'office' => $record->getColumn('Office') ?: '—',
-            'area_location' => $record->getColumn('Area Location') ?: $record->getColumn('Floor') ?: '—',
-            'section' => $record->getColumn('Section') ?? $record->getColumn('SECTION') ?? '—',
+            'area_location' => $record->getColumn('Area Location') ?: '—',
             'additional_information' => $record->getColumn('Additional Information') ?: '—',
             'remarks' => $record->getColumn('Remarks') ?: '—',
-            'notes' => $record->getColumn('Notes') ?? '—',
         ];
 
         $imageUrls = [];
@@ -201,6 +247,209 @@ class RecordController extends Controller
         }
 
         return view('records.print', compact('record', 'data', 'imageUrls'));
+    }
+
+    /**
+     * Query params to keep when redirecting back to the records list (pagination + filters).
+     *
+     * @return array<string, mixed>
+     */
+    private function recordsListQuery(Request $request): array
+    {
+        $out = [];
+        foreach (['page', 'search', 'person_responsible', 'type'] as $key) {
+            if ($request->filled($key)) {
+                $out[$key] = $request->input($key);
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Collect and trim canonical column values from request.
+     * Empty values become null for validation.
+     *
+     * @return array<string, mixed>
+     */
+    private function rawRecordDataFromRequest(Request $request): array
+    {
+        $input = $request->all();
+        $fingerprintMap = [];
+        foreach ($input as $k => $v) {
+            $fp = $this->requestKeyFingerprint((string) $k);
+            if ($fp !== '' && ! array_key_exists($fp, $fingerprintMap)) {
+                $fingerprintMap[$fp] = $v;
+            }
+        }
+        $raw = [];
+        foreach (self::TABLE_COLUMNS as $col) {
+            $value = $request->input($col);
+            if ($value === null) {
+                // PHP normalizes form keys by replacing spaces/dots with underscores.
+                $normalizedKey = preg_replace('/[.\s]+/', '_', $col);
+                $value = $normalizedKey !== null && array_key_exists($normalizedKey, $input)
+                    ? $input[$normalizedKey]
+                    : null;
+            }
+            if ($value === null) {
+                // Last-resort match: ignore spaces, dots, and underscores/case differences.
+                $fp = $this->requestKeyFingerprint($col);
+                $value = ($fp !== '' && array_key_exists($fp, $fingerprintMap))
+                    ? $fingerprintMap[$fp]
+                    : null;
+            }
+            if ($value === null) {
+                $raw[$col] = null;
+                continue;
+            }
+            $value = trim((string) $value);
+            $raw[$col] = $value === '' ? null : $value;
+        }
+
+        return $raw;
+    }
+
+    /**
+     * Laravel treats "." in validation rule keys as nested paths (e.g. data_get on "PO No." breaks).
+     * Escape dots so flat keys like "PO No." and "Property No." validate against $raw correctly.
+     */
+    private function validationRuleAttribute(string $column): string
+    {
+        return str_replace('.', '\\.', $column);
+    }
+
+    private function requestKeyFingerprint(string $key): string
+    {
+        return strtolower(preg_replace('/[^a-z0-9]+/i', '', $key) ?? '');
+    }
+
+    /**
+     * Validate and normalize manual add/edit payload to required data types.
+     *
+     * - Account Code: 0-00-00-000
+     * - Date of Purchase: date
+     * - PO No.: 00-00-0000
+     * - Unit Value / On Hand Value: non-negative number (commas + decimal allowed, stored as rounded integer); shown as cash (₱x,xxx.xx)
+     * - Others: string
+     * @param  bool  $requireAllFieldsForCreate  If true (manual add), every column is required except
+     *                                           those in {@see self::MANUAL_CREATE_OPTIONAL_COLUMNS}.
+     *
+     * @return array<string, mixed>
+     */
+    private function validatedRecordData(Request $request, bool $requireAllFieldsForCreate = false): array
+    {
+        $raw = $this->rawRecordDataFromRequest($request);
+
+        $optionalCols = self::MANUAL_CREATE_OPTIONAL_COLUMNS;
+        $specialCols = ['Account Code', 'Date of Purchase', 'PO No.', 'Unit Value', 'On Hand Value'];
+
+        $rules = [];
+        foreach (self::TABLE_COLUMNS as $col) {
+            if (in_array($col, $specialCols, true)) {
+                continue;
+            }
+            $isOptional = in_array($col, $optionalCols, true);
+            $required = $requireAllFieldsForCreate && ! $isOptional;
+            $rules[$this->validationRuleAttribute($col)] = $required ? ['required', 'string'] : ['nullable', 'string'];
+        }
+
+        $presence = $requireAllFieldsForCreate ? ['required'] : ['nullable'];
+
+        if ($requireAllFieldsForCreate) {
+            // Manual create keeps strict formats.
+            $rules[$this->validationRuleAttribute('Account Code')] = array_merge($presence, ['string', 'regex:/^\d-\d{2}-\d{2}-\d{3}$/']);
+            $rules[$this->validationRuleAttribute('Date of Purchase')] = array_merge($presence, ['date']);
+            $rules[$this->validationRuleAttribute('PO No.')] = array_merge($presence, ['string', 'regex:/^\d{2}-\d{2}-\d{4}$/']);
+        } else {
+            // Edit mode accepts legacy/imported values so partially fixing rows won't be blocked.
+            $rules[$this->validationRuleAttribute('Account Code')] = ['nullable', 'string'];
+            $rules[$this->validationRuleAttribute('Date of Purchase')] = ['nullable', 'string'];
+            $rules[$this->validationRuleAttribute('PO No.')] = ['nullable', 'string'];
+        }
+
+        $moneyRule = function (string $attribute, mixed $value, \Closure $fail): void {
+            if ($value === null || (is_string($value) && trim($value) === '')) {
+                return;
+            }
+            if ($this->parseFlexibleMoneyToInt((string) $value) === null) {
+                $label = $attribute === 'Unit Value' ? 'Unit Value' : 'On Hand Value';
+                $fail("{$label} must be a valid cash amount (e.g. 1,234.00 or ₱1,234).");
+            }
+        };
+        $rules[$this->validationRuleAttribute('Unit Value')] = array_merge($presence, ['string', $moneyRule]);
+        $rules[$this->validationRuleAttribute('On Hand Value')] = array_merge($presence, ['string', $moneyRule]);
+
+        $poRuleKey = $this->validationRuleAttribute('PO No.');
+        $validated = Validator::make(
+            $raw,
+            $rules,
+            [
+                $this->validationRuleAttribute('Account Code') . '.regex' => 'Account Code format must be 0-00-00-000.',
+                $poRuleKey . '.regex' => 'PO No. format must be 00-00-0000.',
+                $this->validationRuleAttribute('Date of Purchase') . '.date' => 'Date of Purchase must be a valid date.',
+            ]
+        )->validate();
+
+        $normalized = [];
+        foreach (self::TABLE_COLUMNS as $col) {
+            $value = $validated[$col] ?? null;
+            if ($value === null) {
+                $normalized[$col] = null;
+                continue;
+            }
+
+            if ($col === 'Unit Value' || $col === 'On Hand Value') {
+                $s = trim((string) $value);
+                if ($s === '') {
+                    $normalized[$col] = null;
+                    continue;
+                }
+                $normalized[$col] = $this->parseFlexibleMoneyToInt($s) ?? 0;
+                continue;
+            }
+
+            $normalized[$col] = trim((string) $value);
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Parse values like "1,234.56" or "1234" into a non-negative int (rounded). Returns null if invalid.
+     */
+    private function parseFlexibleMoneyToInt(string $raw): ?int
+    {
+        $s = trim($raw);
+        if ($s === '') {
+            return null;
+        }
+        $s = str_replace(['₱', "\u{00A0}"], '', $s);
+        $s = trim($s);
+        $s = str_replace(',', '', $s);
+        $s = preg_replace('/\s+/', '', $s) ?? $s;
+        if ($s === '' || ! is_numeric($s)) {
+            return null;
+        }
+        $num = (float) $s;
+        if ($num < 0) {
+            return null;
+        }
+
+        return (int) round($num);
+    }
+
+    /**
+     * Raw SQL condition for PAR (unit value >= threshold) or ICS (unit value < threshold).
+     * Parses "Unit Value" from row_data JSON; treats non-numeric/empty as 0.
+     */
+    private static function unitValueRawCondition(string $type): string
+    {
+        $op = $type === 'par' ? '>=' : '<';
+        $th = self::PAR_ICS_THRESHOLD;
+        $path = "'\$.\"Unit Value\"'";
+        $expr = "CAST(REPLACE(REPLACE(COALESCE(TRIM(CAST(json_extract(row_data, {$path}) AS TEXT)), '0'), ',', ''), ' ', '') AS REAL)";
+        return "({$expr} {$op} {$th})";
     }
 
     private function formatDateForPrint(mixed $value): string
@@ -216,14 +465,6 @@ class RecordController extends Controller
             return str_pad($m[1], 2, '0', STR_PAD_LEFT) . '/' . str_pad($m[2], 2, '0', STR_PAD_LEFT) . '/' . $m[3];
         }
         return $str;
-    }
-
-    private function formatNumberForPrint(mixed $value, bool $withDecimals): string
-    {
-        $str = trim((string) $value);
-        $str = str_replace(',', '', $str);
-        $num = is_numeric($str) ? (float) $str : 0;
-        return $withDecimals ? number_format($num, 2) : number_format((int) round($num));
     }
 
     private function formatQtyForPrint(mixed $qty, mixed $unit): string

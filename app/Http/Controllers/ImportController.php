@@ -6,11 +6,15 @@ use App\Http\Controllers\RecordController;
 use App\Models\ImportBatch;
 use App\Models\ImportRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use League\Csv\Reader;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ImportController extends Controller
 {
+    /** Chunk size for bulk insert (SQLite variable limit ~999; 5 columns × 150 = 750). */
+    private const IMPORT_INSERT_CHUNK = 150;
+
     public function create()
     {
         return view('imports.create');
@@ -21,40 +25,99 @@ class ImportController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'file' => 'required|file|mimes:csv,xlsx,xls|max:10240',
-        ]);
+        @set_time_limit(0);
 
-        $file = $request->file('file');
-        $extension = strtolower($file->getClientOriginalExtension());
-
-        $parsed = $extension === 'csv'
-            ? $this->parseCsv($file)
-            : $this->parseExcel($file);
-
-        if (empty($parsed['rows'])) {
-            return back()->with('error', 'No data found in the file.');
-        }
-
-        $canonical = RecordController::TABLE_COLUMNS;
-        $batch = ImportBatch::create([
-            'filename' => $file->getClientOriginalName(),
-            'headers' => $canonical,
-        ]);
-
-        $created = 0;
-        foreach ($parsed['rows'] as $row) {
-            if ($this->isRowEmpty($row)) {
-                continue;
-            }
-            $normalized = $this->normalizeRowToCanonical($row, $canonical);
-            $batch->records()->create([
-                'row_data' => $this->ensureUtf8Recursive($normalized),
+        try {
+            $request->validate([
+                'file' => 'required|file|mimes:csv,xlsx,xls|max:10240',
             ]);
-            $created++;
-        }
 
-        return redirect()->route('records.index')->with('success', $created . ' records imported successfully.');
+            $file = $request->file('file');
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            $parsed = $extension === 'csv'
+                ? $this->parseCsv($file)
+                : $this->parseExcel($file);
+
+            if (empty($parsed['rows'])) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'ok' => false,
+                        'message' => 'No data found in the file.',
+                    ], 422);
+                }
+
+                return back()->with('error', 'No data found in the file.');
+            }
+
+            $canonical = RecordController::TABLE_COLUMNS;
+
+            $created = 0;
+            DB::transaction(function () use ($file, $parsed, $canonical, &$created): void {
+                $batch = ImportBatch::create([
+                    'filename' => $file->getClientOriginalName(),
+                    'headers' => $canonical,
+                ]);
+
+                $now = now();
+                $emptyImages = json_encode([], JSON_UNESCAPED_UNICODE);
+                $buffer = [];
+                $rowNo = 0;
+
+                foreach ($parsed['rows'] as $row) {
+                    if ($this->isRowEmpty($row)) {
+                        continue;
+                    }
+                    $normalized = $this->normalizeRowToCanonical($row, $canonical);
+                    $rowNo++;
+
+                    $buffer[] = [
+                        'import_batch_id' => $batch->id,
+                        'row_no_in_batch' => $rowNo,
+                        'row_data' => ImportRecord::encodeRowDataForDatabase($normalized),
+                        'image_paths' => $emptyImages,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                    $created++;
+
+                    if (count($buffer) >= self::IMPORT_INSERT_CHUNK) {
+                        ImportRecord::insert($buffer);
+                        $buffer = [];
+                    }
+                }
+
+                if ($buffer !== []) {
+                    ImportRecord::insert($buffer);
+                }
+            });
+
+            $message = $created . ' records imported successfully.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'ok' => true,
+                    'message' => $message,
+                    'created' => $created,
+                    'redirect' => route('records.index'),
+                ]);
+            }
+
+            return redirect()->route('records.index')->with('success', $message);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            report($e);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'ok' => false,
+                    'message' => 'Import failed on the server. Check storage/logs/laravel.log for details.',
+                ], 500);
+            }
+
+            return back()->with('error', 'Import failed. Check storage/logs/laravel.log for details.');
+        }
     }
 
     /** Laktawi ang blank rows (pananglitan walay sulod nga line human sa header). */
@@ -72,7 +135,24 @@ class ImportController extends Controller
     private function getHeaderAliases(): array
     {
         return [
-            'Description' => ['descriptions', 'desc'],
+            'Account Code' => ['account', 'acct code', 'acct. code'],
+            'Fund' => [],
+            'Category' => [],
+            'Subcategory' => ['sub category', 'sub-cat'],
+            'Description' => ['descriptions', 'desc', 'item description'],
+            'Date of Purchase' => ['purchase date', 'date purchased', 'date of order', 'order date'],
+            'Property No.' => ['property number', 'prop no', 'prop. no.', 'property #'],
+            'PO No.' => ['po number', 'po #', 'p.o. no.', 'p.o. number', 'purchase order', 'pono'],
+            'Unit' => [],
+            'Qty' => ['quantity', 'qty.', 'qnty'],
+            'Unit Value' => ['unit cost', 'unit price', 'cost per unit'],
+            'On Hand Count' => ['on hand qty', 'oh count', 'stock count'],
+            'On Hand Value' => ['oh value', 'total value', 'inventory value'],
+            'Person Responsible' => ['person', 'custodian', 'assigned to', 'responsible person'],
+            'Office' => [],
+            'Area Location' => ['area', 'location', 'site'],
+            'Additional Information' => ['additional info', 'add info', 'notes', 'other info'],
+            'Remarks' => ['remark', 'comments'],
         ];
     }
 
@@ -102,7 +182,92 @@ class ImportController extends Controller
         if (($desc === null || trim((string) $desc) === '') && ! empty(trim((string) ($normalized['Subcategory'] ?? '')))) {
             $normalized['Description'] = $normalized['Subcategory'];
         }
-        return $normalized;
+
+        return $this->normalizeImportedRowValues($normalized);
+    }
+
+    /**
+     * Align imported values with manual record rules:
+     * - Date of Purchase: normalized to Y-m-d when parseable
+     * - Unit Value / On Hand Value: parsed to non-negative rounded int
+     * - Everything else: trimmed string (or null when empty)
+     *
+     * @param  array<string, mixed>  $row
+     * @return array<string, mixed>
+     */
+    private function normalizeImportedRowValues(array $row): array
+    {
+        foreach ($row as $col => $value) {
+            if ($value === null) {
+                $row[$col] = null;
+                continue;
+            }
+
+            $s = trim((string) $value);
+            if ($s === '') {
+                $row[$col] = null;
+                continue;
+            }
+
+            if ($col === 'Date of Purchase') {
+                $row[$col] = $this->normalizeImportedDate($s);
+                continue;
+            }
+
+            if ($col === 'Unit Value' || $col === 'On Hand Value') {
+                $row[$col] = $this->parseFlexibleMoneyToInt($s) ?? $s;
+                continue;
+            }
+
+            $row[$col] = $s;
+        }
+
+        return $row;
+    }
+
+    private function normalizeImportedDate(string $raw): string
+    {
+        $s = trim($raw);
+
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $s)) {
+            return $s;
+        }
+
+        if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $s, $m)) {
+            $month = str_pad($m[1], 2, '0', STR_PAD_LEFT);
+            $day = str_pad($m[2], 2, '0', STR_PAD_LEFT);
+            return $m[3] . '-' . $month . '-' . $day;
+        }
+
+        if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $s, $m)) {
+            $month = str_pad($m[1], 2, '0', STR_PAD_LEFT);
+            $day = str_pad($m[2], 2, '0', STR_PAD_LEFT);
+            return $m[3] . '-' . $month . '-' . $day;
+        }
+
+        $ts = strtotime($s);
+        return $ts !== false ? date('Y-m-d', $ts) : $s;
+    }
+
+    private function parseFlexibleMoneyToInt(string $raw): ?int
+    {
+        $s = trim($raw);
+        if ($s === '') {
+            return null;
+        }
+        $s = str_replace(['₱', "\u{00A0}"], '', $s);
+        $s = trim($s);
+        $s = str_replace(',', '', $s);
+        $s = preg_replace('/\s+/', '', $s) ?? $s;
+        if ($s === '' || ! is_numeric($s)) {
+            return null;
+        }
+        $num = (float) $s;
+        if ($num < 0) {
+            return null;
+        }
+
+        return (int) round($num);
     }
 
     /**
@@ -110,7 +275,12 @@ class ImportController extends Controller
      */
     private function parseCsv($file): array
     {
-        $reader = Reader::createFromPath($file->getRealPath());
+        $path = $file->getRealPath();
+        if ($path === false) {
+            return ['headers' => [], 'rows' => []];
+        }
+        $utf8 = $this->fileContentsAsUtf8($path);
+        $reader = Reader::createFromString($utf8);
         $allRows = iterator_to_array($reader->getRecords());
         if (empty($allRows)) {
             return ['headers' => [], 'rows' => []];
@@ -169,6 +339,26 @@ class ImportController extends Controller
         return trim($cell);
     }
 
+    /**
+     * Read CSV as bytes and normalize to UTF-8 so League CSV and JSON storage do not fail on Windows-1252 exports.
+     */
+    private function fileContentsAsUtf8(string $path): string
+    {
+        $raw = file_get_contents($path);
+        if ($raw === false || $raw === '') {
+            return '';
+        }
+        if (str_starts_with($raw, "\xEF\xBB\xBF")) {
+            $raw = substr($raw, 3);
+        }
+        if (function_exists('mb_check_encoding') && mb_check_encoding($raw, 'UTF-8')) {
+            return $raw;
+        }
+        $converted = @iconv('Windows-1252', 'UTF-8//IGNORE', $raw);
+
+        return $converted !== false ? $converted : $raw;
+    }
+
     private function makeHeadersUnique(array $rawHeaders): array
     {
         $seen = [];
@@ -199,17 +389,5 @@ class ImportController extends Controller
             return $cell->format('Y-m-d');
         }
         return (string) $cell;
-    }
-
-    private function ensureUtf8Recursive(mixed $value): mixed
-    {
-        if (is_array($value)) {
-            return array_map(fn ($v) => $this->ensureUtf8Recursive($v), $value);
-        }
-        if (is_string($value)) {
-            $clean = @iconv('UTF-8', 'UTF-8//IGNORE', $value);
-            return $clean !== false ? $clean : '';
-        }
-        return $value;
     }
 }

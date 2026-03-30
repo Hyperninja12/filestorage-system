@@ -1,6 +1,6 @@
 /**
  * PM2 config: run Laravel app as a server (offline/LAN).
- * Uses a .bat file so PHP runs with correct PATH on Windows.
+ * Uses server.cjs (Node) so PHP runs with no visible CMD window.
  * Usage:
  *   pm2 start ecosystem.config.cjs
  *   pm2 save
@@ -10,14 +10,17 @@ module.exports = {
   apps: [
     {
       name: 'jesproject',
-      script: 'run-jesproject.bat',
-      interpreter: 'cmd.exe',
-      interpreter_args: '/c',
+      script: 'server.cjs',
       cwd: __dirname,
+      interpreter: 'node',
+      exec_mode: 'fork',
       instances: 1,
       autorestart: true,
       watch: false,
       max_restarts: 10,
+      env: {
+        PHP_BINARY: process.env.PHP_BINARY || undefined,
+      },
     },
   ],
 };

@@ -61,14 +61,13 @@
         <tr><th>PROPERTY NUMBER</th><td>{{ $data['property_no'] ?? '—' }}</td></tr>
         <tr><th>P.O NUMBER</th><td>{{ $data['po_no'] ?? '—' }}</td></tr>
         <tr><th>UNIT VALUE</th><td>{{ $data['unit_value'] ?? '—' }}</td></tr>
+        <tr><th>ON HAND VALUE</th><td>{{ $data['on_hand_value'] ?? '—' }}</td></tr>
         <tr><th>QTY</th><td>{{ $data['qty'] ?? '—' }}</td></tr>
         <tr><th>PERSON RESPONSIBLE</th><td>{{ $data['person_responsible'] ?? '—' }}</td></tr>
         <tr><th>OFFICE</th><td>{{ $data['office'] ?? '—' }}</td></tr>
         <tr><th>AREA LOCATION</th><td>{{ $data['area_location'] ?? '—' }}</td></tr>
-        <tr><th>SECTION</th><td>{{ $data['section'] ?? '—' }}</td></tr>
         <tr><th>ADDITIONAL INFORMATION</th><td>{!! nl2br(e($data['additional_information'] ?? '—')) !!}</td></tr>
         <tr><th>REMARKS</th><td>{!! nl2br(e($data['remarks'] ?? '—')) !!}</td></tr>
-        <tr><th>NOTES</th><td>{{ $data['notes'] ?? '—' }}</td></tr>
     </table>
     </div>
 

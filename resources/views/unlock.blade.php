@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Unlock - {{ config('app.name') }}</title>
+    <title>Unlock — {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -28,14 +28,60 @@
                         radial-gradient(ellipse 50% 30% at 0% 80%, rgba(14, 165, 233, 0.06), transparent);
             pointer-events: none;
         }
-        .unlock-wrap { position: relative; z-index: 1; width: 100%; max-width: 24rem; padding: 1.5rem; }
+        .unlock-wrap {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 24rem;
+            padding: 1.5rem;
+            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out, filter 0.25s ease-in-out;
+        }
+        .unlock-wrap.unlock-fadeout {
+            opacity: 0;
+            transform: scale(0.985);
+            filter: blur(1px);
+        }
+        .unlock-card-ring {
+            position: relative;
+            border-radius: 1.25rem;
+            padding: 3px;
+            overflow: hidden;
+        }
+        .unlock-card-ring::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            left: -50%;
+            top: -50%;
+            background: conic-gradient(from 0deg, transparent 0deg 200deg, rgba(14, 165, 233, 0.5) 230deg, #0ea5e9 260deg, #06b6d4 290deg, transparent 320deg);
+            animation: unlock-ring-spin 2.5s linear infinite;
+        }
+        .unlock-card-ring::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            left: -50%;
+            top: -50%;
+            background: conic-gradient(from 180deg, transparent 0deg 160deg, rgba(6, 182, 212, 0.6) 190deg, #06b6d4 220deg, #0ea5e9 250deg, transparent 280deg);
+            animation: unlock-ring-spin-reverse 3s linear infinite;
+        }
         .unlock-card {
+            position: relative;
+            z-index: 1;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
-            border-radius: 1.25rem;
+            border-radius: calc(1.25rem - 3px);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
             padding: 2.25rem 2rem;
             border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        @keyframes unlock-ring-spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes unlock-ring-spin-reverse {
+            to { transform: rotate(-360deg); }
         }
         .unlock-icon-wrap {
             width: 3.5rem; height: 3.5rem;
@@ -100,8 +146,11 @@
             background: rgba(232, 246, 243, 0.92);
             display: flex; align-items: center; justify-content: center;
             backdrop-filter: blur(4px);
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.25s ease-in-out;
         }
-        .unlock-loading.hidden { display: none; }
+        .unlock-loading.hidden { opacity: 0; pointer-events: none; }
         .unlock-loading-content { text-align: center; }
         .unlock-loading-spinner {
             width: 2.75rem; height: 2.75rem;
@@ -123,11 +172,12 @@
         </div>
     </div>
     <div class="unlock-wrap">
+    <div class="unlock-card-ring">
     <div class="unlock-card">
         <div class="unlock-icon-wrap" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
         </div>
-        <h1 class="unlock-title">Welcome back, Ma'am</h1>
+        <h1 class="unlock-title">Welcome back, Ma'am Jesty!
         <p class="unlock-subtitle">Enter your password to continue</p>
         <form id="unlock-form" action="{{ route('unlock.submit') }}" method="POST">
             @csrf
@@ -143,6 +193,7 @@
             @enderror
             <button type="submit" class="unlock-btn" id="unlock-submit-btn">Unlock</button>
         </form>
+    </div>
     </div>
     </div>
     <script>
@@ -170,9 +221,11 @@
 
             var form = document.getElementById('unlock-form');
             var loadingEl = document.getElementById('unlock-loading');
+            var wrap = document.querySelector('.unlock-wrap');
             var submitBtn = document.getElementById('unlock-submit-btn');
-            if (form && loadingEl && submitBtn) {
+            if (form && loadingEl && submitBtn && wrap) {
                 form.addEventListener('submit', function() {
+                    wrap.classList.add('unlock-fadeout');
                     loadingEl.classList.remove('hidden');
                     submitBtn.disabled = true;
                 });

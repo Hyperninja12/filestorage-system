@@ -51,17 +51,13 @@ To use **this PC as a server** so other devices on your network (or only this PC
    - On this PC: **http://127.0.0.1:8000**  
    - From other devices: **http://YOUR_PC_IP:8000** (e.g. `http://192.168.8.102:8000`). Find your IP with `ipconfig` (Windows) or `ip a` (Linux).
 
-2. **Keep it running with PM2** (needs Node.js installed):  
-   - `npm install -g pm2`  
-   - In the project folder: `pm2 start ecosystem.config.cjs`  
-   - PM2 will **auto-restart** the app if it crashes.  
-   - **Start when Windows boots:**  
-     - Run once: `pm2 save` (saves the current process list).  
-     - **Option A (recommended):** `npm install -g pm2-windows-startup` then `pm2-startup install`. After each reboot, your saved app will start automatically.  
-     - **Option B:** Put **`pm2-resurrect-on-boot.bat`** (in the project folder) in your Windows Startup folder so it runs at login: press `Win+R`, type `shell:startup`, Enter, then copy or shortcut the batch file there.
+2. **Start the server (recommended):**  
+   Double‑click **`start-server.bat`** in the project folder. It uses PM2 so the server runs in the background and the window closes; the app stays running.  
+   - Needs Node.js and PM2 once: `npm install -g pm2`  
+   - **Start when Windows boots:** Run `pm2 save` once, then put **`pm2-resurrect-on-boot.bat`** in your Startup folder (`Win+R` → `shell:startup`). Or use `pm2-windows-startup` (see `docs/AUTO_START_WINDOWS.md`).
 
 3. **Without PM2:**  
-   Double‑click **`start-server.bat`** in the project folder (or run it from a terminal). It starts the server on `0.0.0.0:8000`; close the window to stop.
+   In a terminal in the project folder, run: `php artisan serve --host=0.0.0.0 --port=8000`. The server runs until you close the terminal.
 
 No internet is required; everything runs on your local network (or only on this machine).
 

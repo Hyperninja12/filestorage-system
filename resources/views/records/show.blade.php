@@ -1,19 +1,25 @@
 {{-- Detail sa record: back link, card nga naay header ug data table, image section. --}}
 @extends('layouts.app')
 
-@section('title', 'Record #' . $record->id)
+@section('title', 'Record #' . $record->getDisplayNumber())
 
 @section('content')
+    @php
+        $listQuery = array_filter(
+            request()->only(['page', 'search', 'person_responsible', 'type']),
+            fn ($v) => $v !== null && $v !== ''
+        );
+    @endphp
     <div class="record-detail">
-        <a href="{{ route('records.index') }}" class="app-back-btn">
+        <a href="{{ route('records.index', $listQuery) }}" class="app-back-btn">
             <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
             Back to records
         </a>
         <div class="record-detail-card">
             <div class="record-detail-header">
-                <h1 class="record-detail-title">Record #{{ $record->id }}</h1>
+                <h1 class="record-detail-title">Record #{{ $record->getDisplayNumber() }}</h1>
                 <div class="record-detail-actions">
-                    <a href="{{ route('records.edit', $record) }}" class="record-detail-btn record-detail-btn-primary">Edit</a>
+                    <a href="{{ route('records.edit', array_merge(['record' => $record], $listQuery)) }}" class="record-detail-btn record-detail-btn-primary">Edit</a>
                     <a href="{{ route('records.print', $record) }}" target="_blank" class="record-detail-btn record-detail-btn-secondary">Print</a>
                     @if (count($record->getImagePaths()) > 0)
                         <button type="button" onclick="previewImage('{{ route('records.image', [$record, 0]) }}')" class="record-detail-btn record-detail-btn-secondary">Preview images</button>
@@ -25,9 +31,17 @@
                             <button type="button" onclick="document.getElementById('attach-file').click()" class="record-detail-btn record-detail-btn-secondary">Attach image ({{ count($record->getImagePaths()) }}/2)</button>
                         </form>
                     @endif
-                    <form action="{{ route('records.destroy', $record) }}" method="POST" class="inline" onsubmit="return confirm('Delete this record?');">
+                    <form action="{{ route('records.destroy', $record) }}" method="POST" class="inline"
+                        data-app-confirm="1"
+                        data-app-confirm-title="Delete this record?"
+                        data-app-confirm-message="This action cannot be undone."
+                        data-app-confirm-ok="Delete"
+                        data-app-confirm-variant="danger">
                         @csrf
                         @method('DELETE')
+                        @foreach ($listQuery as $key => $value)
+                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                        @endforeach
                         <button type="submit" class="record-detail-btn record-detail-btn-danger">Delete</button>
                     </form>
                 </div>
@@ -39,11 +53,15 @@
                         @foreach ($columns as $col)
                             @php
                                 $val = $record->getColumn($col);
-                                $display = ($val !== null && $val !== '') ? $val : '—';
+                                if (in_array($col, ['Unit Value', 'On Hand Value'], true)) {
+                                    $display = \App\Support\CashFormatter::formatOrPlaceholder($val);
+                                } else {
+                                    $display = ($val !== null && $val !== '') ? $val : '—';
+                                }
                             @endphp
                             <tr class="detail-table-tr">
                                 <th class="detail-table-th">{{ $col }}</th>
-                                <td class="detail-table-td">{{ $display }}</td>
+                                <td class="detail-table-td @if(in_array($col, ['Unit Value', 'On Hand Value'], true)) detail-table-td-cash @endif">{{ $display }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -57,7 +75,12 @@
                         @foreach ($record->getImagePaths() as $idx => $path)
                             <div class="record-detail-image-item">
                                 <img src="{{ route('records.image', [$record, $idx]) }}" alt="Image {{ $idx + 1 }}" class="record-detail-image">
-                                <form action="{{ route('records.remove-image', [$record, $idx]) }}" method="POST" class="record-detail-image-remove-form" onsubmit="return confirm('Remove this image?');">
+                                <form action="{{ route('records.remove-image', [$record, $idx]) }}" method="POST" class="record-detail-image-remove-form"
+                                    data-app-confirm="1"
+                                    data-app-confirm-title="Remove this image?"
+                                    data-app-confirm-message="This image will be removed from the record."
+                                    data-app-confirm-ok="Remove"
+                                    data-app-confirm-variant="danger">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="record-detail-image-remove-btn" title="Remove image" aria-label="Remove image">×</button>
@@ -162,6 +185,10 @@
         word-break: break-word;
         white-space: pre-wrap;
         max-width: 40rem;
+    }
+    .detail-table-td-cash {
+        font-variant-numeric: tabular-nums;
+        white-space: normal;
     }
     .detail-table-tr:nth-child(even) .detail-table-th { background: #f1f5f9; }
     .detail-table-tr:nth-child(even) .detail-table-td { background: #f8fafc; }

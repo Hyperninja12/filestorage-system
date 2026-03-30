@@ -1,56 +1,30 @@
-{{-- Form sa pag-edit sa record: back link, card nga naay header ug form table. --}}
+{{-- Form to add a new record manually (no import file). --}}
 @extends('layouts.app')
 
-@section('title', 'Edit Record #' . $record->getDisplayNumber())
+@section('title', 'Add Record')
 
 @section('content')
-    @php
-        $listQuery = array_filter(
-            request()->only(['page', 'search', 'person_responsible', 'type']),
-            fn ($v) => $v !== null && $v !== ''
-        );
-    @endphp
     <div class="record-edit">
-        <a href="{{ route('records.show', array_merge(['record' => $record], $listQuery)) }}" class="app-back-btn">
+        <a href="{{ route('records.index') }}" class="app-back-btn">
             <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
-            Back to record
+            Back to records
         </a>
         <div class="record-edit-card">
             <div class="record-edit-header">
-                <h1 class="record-edit-title">Edit Record #{{ $record->getDisplayNumber() }}</h1>
+                <h1 class="record-edit-title">Add new record</h1>
+                <p class="record-edit-subtitle">Enter the data below. You can add images after saving.</p>
             </div>
-            {{-- Remove-image forms must NOT be nested inside the update <form> (invalid HTML breaks Save). --}}
-            @if (count($record->getImagePaths()) > 0)
-                <div class="record-edit-image-section">
-                    <span class="record-edit-image-label">Attached images ({{ count($record->getImagePaths()) }}/2)</span>
-                    <div class="record-edit-image-grid">
-                        @foreach ($record->getImagePaths() as $idx => $path)
-                            <div class="record-edit-image-item">
-                                <img src="{{ route('records.image', [$record, $idx]) }}" alt="Image {{ $idx + 1 }}" class="record-edit-image-thumb">
-                                <form action="{{ route('records.remove-image', [$record, $idx]) }}" method="POST" class="record-edit-image-remove-form"
-                                    data-app-confirm="1"
-                                    data-app-confirm-title="Remove this image?"
-                                    data-app-confirm-message="This image will be removed from the record."
-                                    data-app-confirm-ok="Remove"
-                                    data-app-confirm-variant="danger">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="record-edit-image-remove-btn" title="Remove image" aria-label="Remove image">× Remove</button>
-                                </form>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-            <form action="{{ route('records.update', $record) }}" method="POST">
+            <div class="record-insert-alert" role="status">
+                <strong>Before you save</strong> — Check that the fields are correct. Click <em>Add record</em>, then confirm in the popup to insert this row.
+            </div>
+            <form action="{{ route('records.store') }}" method="POST" id="record-create-form">
                 @csrf
-                @method('PUT')
-                @foreach ($listQuery as $key => $value)
-                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                @endforeach
                 <div class="record-edit-body">
                     <table class="edit-table w-full border-collapse">
                         <tbody>
+                            @php
+                                $manualCreateOptionalColumns = $manualCreateOptionalColumns ?? [];
+                            @endphp
                             @foreach ($columns as $col)
                                 <tr class="edit-table-tr">
                                     <th class="edit-table-th">
@@ -59,7 +33,7 @@
                                     <td class="edit-table-td">
                                         @php
                                             $requestKey = preg_replace('/[.\s]+/', '_', $col) ?? str_replace(' ', '_', $col);
-                                            $fieldValue = old($col, old($requestKey, $record->getColumn($col)));
+                                            $val = old($col) ?? old($requestKey);
                                             $inputType = 'text';
                                             $inputPattern = null;
                                             $inputTitle = null;
@@ -88,12 +62,12 @@
                                                 $inputMode = 'decimal';
                                                 $inputTitle = 'Cash format: commas + two decimals (e.g. ₱1,234.00)';
                                                 $placeholder = '1,234.00';
-                                                if ($fieldValue !== null && $fieldValue !== '') {
-                                                    $fieldValue = \App\Support\CashFormatter::formatForInput($fieldValue);
+                                                if ($val !== null && $val !== '') {
+                                                    $val = \App\Support\CashFormatter::formatForInput($val);
                                                 }
                                             }
                                         @endphp
-                                        <input type="{{ $inputType }}" name="{{ $requestKey }}" id="field-{{ Str::slug($col) }}" value="{{ $fieldValue }}"
+                                        <input type="{{ $inputType }}" name="{{ $requestKey }}" id="field-{{ Str::slug($col) }}" value="{{ $val }}"
                                             placeholder="{{ $placeholder }}"
                                             @if ($inputMaxlength) maxlength="{{ $inputMaxlength }}" @endif
                                             @if ($inputPattern) pattern="{{ $inputPattern }}" @endif
@@ -101,6 +75,7 @@
                                             @if ($inputMin !== null) min="{{ $inputMin }}" @endif
                                             @if ($inputStep !== null) step="{{ $inputStep }}" @endif
                                             @if ($inputMode) inputmode="{{ $inputMode }}" @endif
+                                            @if (! in_array($col, $manualCreateOptionalColumns, true)) required aria-required="true" @endif
                                             class="edit-table-input">
                                         @error($col)
                                             <p class="edit-table-error">{{ $message }}</p>
@@ -112,12 +87,66 @@
                     </table>
                 </div>
                 <div class="record-edit-footer">
-                    <button type="submit" class="record-edit-btn record-edit-btn-primary">Save</button>
-                    <a href="{{ route('records.show', array_merge(['record' => $record], $listQuery)) }}" class="record-edit-btn record-edit-btn-secondary">Cancel</a>
+                    <button type="submit" class="record-edit-btn record-edit-btn-primary" id="record-create-submit">Add record</button>
+                    <a href="{{ route('records.index') }}" class="record-edit-btn record-edit-btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>
     </div>
+
+    <div id="record-insert-confirm" class="record-insert-confirm record-insert-confirm-hidden" aria-hidden="true">
+        <div class="record-insert-confirm-backdrop" data-insert-dismiss tabindex="-1"></div>
+        <div class="record-insert-confirm-panel" role="dialog" aria-modal="true" aria-labelledby="record-insert-confirm-title">
+            <div class="record-insert-confirm-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            </div>
+            <h2 id="record-insert-confirm-title" class="record-insert-confirm-title">Insert this record?</h2>
+            <p class="record-insert-confirm-text">This will save a new row to the database. You can add images after saving.</p>
+            <div class="record-insert-confirm-actions">
+                <button type="button" class="record-insert-confirm-btn record-insert-confirm-btn-secondary" id="record-insert-confirm-cancel">Cancel</button>
+                <button type="button" class="record-insert-confirm-btn record-insert-confirm-btn-primary" id="record-insert-confirm-yes">Yes, insert</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var form = document.getElementById('record-create-form');
+            var modal = document.getElementById('record-insert-confirm');
+            if (!form || !modal) return;
+            function openModal() {
+                if (typeof window.hideAppGlobalLoading === 'function') {
+                    window.hideAppGlobalLoading();
+                }
+                modal.classList.remove('record-insert-confirm-hidden');
+                modal.setAttribute('aria-hidden', 'false');
+                document.getElementById('record-insert-confirm-yes').focus();
+            }
+            function closeModal() {
+                modal.classList.add('record-insert-confirm-hidden');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+            form.addEventListener('submit', function (e) {
+                if (form.getAttribute('data-insert-confirmed') === '1') {
+                    form.setAttribute('data-insert-confirmed', '0');
+                    return;
+                }
+                e.preventDefault();
+                openModal();
+            });
+            document.getElementById('record-insert-confirm-cancel').addEventListener('click', closeModal);
+            modal.querySelectorAll('[data-insert-dismiss]').forEach(function (el) {
+                el.addEventListener('click', closeModal);
+            });
+            document.getElementById('record-insert-confirm-yes').addEventListener('click', function () {
+                closeModal();
+                form.setAttribute('data-insert-confirmed', '1');
+                form.requestSubmit();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && !modal.classList.contains('record-insert-confirm-hidden')) closeModal();
+            });
+        })();
+    </script>
     <script>
         (function () {
             function formatAccountCodeDigits(raw) {
@@ -166,38 +195,19 @@
         border-bottom: 1px solid #e2e8f0;
     }
     .record-edit-title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0; }
-    .record-edit-body { overflow-x: auto; }
-    .record-edit-image-section {
-        padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
-        background: #fafafa;
-    }
-    .record-edit-image-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.75rem; }
-    .record-edit-image-grid { display: flex; flex-wrap: wrap; gap: 1rem; }
-    .record-edit-image-item { position: relative; }
-    .record-edit-image-remove-form { margin-top: 0.25rem; }
-    .record-edit-image-remove-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.4rem 0.75rem;
-        border: none;
-        border-radius: 0.375rem;
-        background: #fee2e2;
-        color: #b91c1c;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.15s, color 0.15s;
-    }
-    .record-edit-image-remove-btn:hover { background: #fecaca; color: #991b1b; }
-    .record-edit-image-thumb {
+    .record-edit-subtitle { font-size: 0.875rem; color: #64748b; margin: 0.25rem 0 0; }
+    .record-insert-alert {
+        margin: 0.75rem 1.5rem 1rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        line-height: 1.45;
+        color: #1e40af;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border: 1px solid #93c5fd;
         border-radius: 0.5rem;
-        border: 1px solid #e2e8f0;
-        max-width: 14rem;
-        max-height: 10rem;
-        object-fit: contain;
     }
+    .record-insert-alert strong { font-weight: 600; }
+    .record-edit-body { overflow-x: auto; }
     .record-edit-footer {
         display: flex;
         gap: 0.75rem;
@@ -247,5 +257,45 @@
         box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
     }
     .edit-table-error { margin-top: 0.25rem; font-size: 0.8125rem; color: #b91c1c; }
+    .record-insert-confirm {
+        position: fixed; inset: 0; z-index: 10060;
+        display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .record-insert-confirm-hidden { display: none !important; }
+    .record-insert-confirm-backdrop {
+        position: absolute; inset: 0;
+        background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(4px);
+    }
+    .record-insert-confirm-panel {
+        position: relative; max-width: 22rem; width: 100%;
+        padding: 1.5rem; background: #fff; border-radius: 1rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        animation: recordInsertPop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes recordInsertPop {
+        from { opacity: 0; transform: scale(0.94) translateY(8px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .record-insert-confirm-icon {
+        width: 2.75rem; height: 2.75rem; margin: 0 auto 1rem;
+        color: #4f46e5; background: #eef2ff; border-radius: 9999px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .record-insert-confirm-icon svg { width: 1.5rem; height: 1.5rem; }
+    .record-insert-confirm-title { font-size: 1.125rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem; text-align: center; }
+    .record-insert-confirm-text { font-size: 0.875rem; color: #64748b; margin: 0 0 1.25rem; line-height: 1.5; text-align: center; }
+    .record-insert-confirm-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .record-insert-confirm-btn {
+        padding: 0.5rem 1.15rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;
+        cursor: pointer; border: 1px solid transparent;
+    }
+    .record-insert-confirm-btn-secondary { background: #fff; color: #475569; border-color: #cbd5e1; }
+    .record-insert-confirm-btn-secondary:hover { background: #f8fafc; }
+    .record-insert-confirm-btn-primary {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #fff;
+        box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+    }
+    .record-insert-confirm-btn-primary:hover { opacity: 0.95; }
 </style>
 @endpush

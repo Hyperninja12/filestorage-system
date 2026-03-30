@@ -26,6 +26,8 @@ Route::middleware(['system.lock'])->group(function (): void {
     Route::post('/import', [ImportController::class, 'store'])->name('import.store');
 
     Route::get('/records', [RecordController::class, 'index'])->name('records.index');
+    Route::get('/records/create', [RecordController::class, 'create'])->name('records.create');
+    Route::post('/records', [RecordController::class, 'store'])->name('records.store');
     Route::get('/records/{record}', [RecordController::class, 'show'])->name('records.show');
     Route::get('/records/{record}/edit', [RecordController::class, 'edit'])->name('records.edit');
     Route::put('/records/{record}', [RecordController::class, 'update'])->name('records.update');

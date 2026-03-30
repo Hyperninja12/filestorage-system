@@ -4,11 +4,33 @@
 @section('title', 'Records')
 
 @section('content')
+    @php
+        $listQuery = array_filter(
+            request()->only(['page', 'search', 'person_responsible', 'type']),
+            fn ($v) => $v !== null && $v !== ''
+        );
+    @endphp
     <div class="records-header">
         <div class="records-header-text">
             <h1 class="records-title">Records</h1>
             <p class="records-subtitle">Search, view, and manage imported data</p>
         </div>
+        <a href="{{ route('records.create') }}" class="records-header-add-btn">
+            <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            Add record
+        </a>
+    </div>
+
+    {{-- PAR / ICS switch: Unit Value 50K+ = PAR, below 50K = ICS --}}
+    @php $currentType = $type ?? request('type', 'all'); @endphp
+    <div class="records-type-switch">
+        <span class="records-type-label">Show:</span>
+        <a href="{{ route('records.index', array_merge(request()->only(['search', 'person_responsible']), ['type' => 'all'])) }}"
+           class="records-type-btn {{ $currentType === 'all' ? 'records-type-btn-active' : '' }}">All</a>
+        <a href="{{ route('records.index', array_merge(request()->only(['search', 'person_responsible']), ['type' => 'par'])) }}"
+           class="records-type-btn records-type-btn-par {{ $currentType === 'par' ? 'records-type-btn-active' : '' }}">PAR</a>
+        <a href="{{ route('records.index', array_merge(request()->only(['search', 'person_responsible']), ['type' => 'ics'])) }}"
+           class="records-type-btn records-type-btn-ics {{ $currentType === 'ics' ? 'records-type-btn-active' : '' }}">ICS</a>
     </div>
 
     {{-- Card para sa search ug filter --}}
@@ -18,14 +40,12 @@
             <span>Search & filter</span>
         </div>
         <form action="{{ route('records.index') }}" method="GET" class="records-search-form">
+            @if ($currentType !== 'all')
+                <input type="hidden" name="type" value="{{ $currentType }}">
+            @endif
             <div class="records-search-field records-search-field-wide">
                 <label for="search" class="records-search-label">Search (any column)</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Type to search..."
-                    class="records-search-input">
-            </div>
-            <div class="records-search-field">
-                <label for="floor" class="records-search-label">By Floor</label>
-                <input type="text" name="floor" id="floor" value="{{ request('floor') }}" placeholder="e.g. 1, 2, 5th"
                     class="records-search-input">
             </div>
             <div class="records-search-field">
@@ -35,7 +55,7 @@
             </div>
             <div class="records-search-buttons">
                 <button type="submit" class="records-search-btn records-search-btn-primary">Search</button>
-                @if (request()->hasAny(['search', 'floor', 'person_responsible']))
+                @if (request()->hasAny(['search', 'person_responsible', 'type']))
                     <a href="{{ route('records.index') }}" class="records-search-btn records-search-btn-secondary">Clear</a>
                 @endif
             </div>
@@ -47,8 +67,26 @@
             <div class="records-empty-icon" aria-hidden="true">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.558l.256 1.128a2.25 2.25 0 002.013 1.58H21.75M2.25 13.5a2.25 2.25 0 00-2.25 2.25v2.25c0 1.114.84 2.03 1.972 2.03 1.171 0 2.18-.879 2.18-2.03V15.75m0-2.25c0-1.114-.84-2.03-1.972-2.03H2.25M15.75 9v2.25m0-2.25v-2.25m0 2.25h2.25m-2.25 0h-2.25" /></svg>
             </div>
-            <p class="records-empty-text">No records yet.</p>
-            <a href="{{ route('import.create') }}" class="records-empty-link">Import a CSV or Excel file</a> to get started.
+            @if ($currentType === 'par')
+                <p class="records-empty-text">No PAR records (Unit Value 50,000 and above).</p>
+            @elseif ($currentType === 'ics')
+                <p class="records-empty-text">No ICS records (Unit Value below 50,000).</p>
+            @else
+                <p class="records-empty-text">No records yet.</p>
+            @endif
+            @if ($currentType === 'all')
+            <p class="records-empty-links">
+                <a href="{{ route('records.create') }}" class="records-empty-link">Add a record manually</a>
+                or
+                <a href="{{ route('import.create') }}" class="records-empty-link">import a CSV or Excel file</a>
+                to get started.
+            </p>
+            @else
+            <p class="records-empty-links">
+                <a href="{{ route('records.index') }}" class="records-empty-link">View all records</a>
+                or try a different filter.
+            </p>
+            @endif
         </div>
     @else
         {{-- Table wrapper: top scroll strip ug body, synced aron makascroll gikan sa taas --}}
@@ -72,13 +110,18 @@
                             <tr class="records-table-tr border-b border-gray-200 hover:bg-slate-50">
                                 <td class="records-table-td records-table-td-actions">
                                     <div class="records-table-actions">
-                                        <a href="{{ route('records.show', $record) }}" class="records-table-btn records-table-btn-view">View</a>
-                                        <a href="{{ route('records.edit', $record) }}" class="records-table-btn records-table-btn-edit">Edit</a>
+                                        <a href="{{ route('records.show', array_merge(['record' => $record], $listQuery)) }}" class="records-table-btn records-table-btn-view">View</a>
+                                        <a href="{{ route('records.edit', array_merge(['record' => $record], $listQuery)) }}" class="records-table-btn records-table-btn-edit">Edit</a>
                                         @php $imgPaths = $record->getImagePaths(); $imgCount = count($imgPaths); @endphp
                                         @if ($imgCount > 0)
                                             <button type="button" onclick="previewImage('{{ route('records.image', [$record, 0]) }}')" class="records-table-btn records-table-btn-image">{{ $imgCount > 1 ? 'Images (' . $imgCount . ')' : 'Image' }}</button>
                                             @if ($imgCount > 0)
-                                                <form action="{{ route('records.remove-image', [$record, 0]) }}" method="POST" class="records-table-action-form records-table-remove-image-form" onsubmit="return confirm('Remove first image?');">
+                                                <form action="{{ route('records.remove-image', [$record, 0]) }}" method="POST" class="records-table-action-form records-table-remove-image-form"
+                                                    data-app-confirm="1"
+                                                    data-app-confirm-title="Remove first image?"
+                                                    data-app-confirm-message="The first attached image will be removed from this record."
+                                                    data-app-confirm-ok="Remove"
+                                                    data-app-confirm-variant="danger">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="records-table-btn records-table-btn-remove-image" title="Remove first image">×</button>
@@ -92,9 +135,17 @@
                                                 <input type="file" name="image" id="attach-{{ $record->id }}" accept="image/*" onchange="this.form.submit()">
                                             </form>
                                         @endif
-                                        <form action="{{ route('records.destroy', $record) }}" method="POST" class="records-table-action-form" onsubmit="return confirm('Delete this record?');">
+                                        <form action="{{ route('records.destroy', $record) }}" method="POST" class="records-table-action-form"
+                                            data-app-confirm="1"
+                                            data-app-confirm-title="Delete this record?"
+                                            data-app-confirm-message="This action cannot be undone."
+                                            data-app-confirm-ok="Delete"
+                                            data-app-confirm-variant="danger">
                                             @csrf
                                             @method('DELETE')
+                                            @foreach ($listQuery as $key => $value)
+                                                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                                            @endforeach
                                             <button type="submit" class="records-table-btn records-table-btn-delete">Delete</button>
                                         </form>
                                     </div>
@@ -102,9 +153,18 @@
                                 @foreach ($headers as $h)
                                     @php
                                         $val = $record->getColumn($h);
-                                        $display = ($val !== null && $val !== '') ? Str::words($val, 40) : '—';
+                                        $isMoney = in_array($h, ['Unit Value', 'On Hand Value'], true);
+                                        if ($isMoney) {
+                                            $display = \App\Support\CashFormatter::formatOrPlaceholder($val);
+                                            $title = $display;
+                                            $tdClass = 'records-table-td records-table-td-cash';
+                                        } else {
+                                            $display = ($val !== null && $val !== '') ? Str::words((string) $val, 40) : '—';
+                                            $title = (string) ($val ?? '');
+                                            $tdClass = 'records-table-td';
+                                        }
                                     @endphp
-                                    <td class="records-table-td" title="{{ $val ?? '' }}">
+                                    <td class="{{ $tdClass }}" title="{{ $title }}">
                                         <span class="records-table-cell">{{ $display }}</span>
                                     </td>
                                 @endforeach
@@ -174,9 +234,47 @@
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
-    .records-header-text { }
+    .records-header-text { flex: 1; }
     .records-title { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin: 0 0 0.25rem 0; letter-spacing: -0.02em; }
     .records-subtitle { font-size: 0.9375rem; color: #64748b; margin: 0; }
+    .records-header-add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #fff;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        border: none;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .records-header-add-btn:hover { opacity: 0.95; }
+    .records-type-switch {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .records-type-label { font-size: 0.875rem; font-weight: 600; color: #475569; margin-right: 0.25rem; }
+    .records-type-btn {
+        display: inline-block;
+        padding: 0.4rem 0.9rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        color: #475569;
+    }
+    .records-type-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+    .records-type-btn-active { background: #e0e7ff; border-color: #6366f1; color: #4338ca; }
+    .records-type-btn-par.records-type-btn-active { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+    .records-type-btn-ics.records-type-btn-active { background: #d1fae5; border-color: #059669; color: #047857; }
     .records-search-card {
         background: #fff;
         border-radius: 1rem;
@@ -240,14 +338,16 @@
         color: rgb(148 163 184);
     }
     .records-empty-icon svg { width: 100%; height: 100%; }
-    .records-empty-text { color: rgb(100 116 139); margin-bottom: 0.5rem; }
+    .records-empty-text { color: rgb(100 116 139); margin-bottom: 0.25rem; }
+    .records-empty-links { color: rgb(100 116 139); margin: 0; font-size: 0.9375rem; }
     .records-empty-link { color: rgb(99 102 241); font-weight: 500; }
     .records-empty-link:hover { text-decoration: underline; }
     .records-table-card {
         background: #fff;
         border-radius: 1rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
-        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04),
+                    0 0 24px rgba(99, 102, 241, 0.12), 0 0 48px rgba(99, 102, 241, 0.06);
+        border: 1px solid rgba(99, 102, 241, 0.2);
         overflow: hidden;
     }
     .records-table-scroll-area { }
@@ -298,6 +398,11 @@
         border-bottom: 1px solid rgb(229 231 235);
     }
     .records-table-td-actions { min-width: 10rem; max-width: none; }
+    .records-table-td-cash .records-table-cell {
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        max-height: none;
+    }
     .records-table-cell {
         display: block;
         max-height: 6em;
