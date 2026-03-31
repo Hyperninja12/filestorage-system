@@ -28,6 +28,7 @@
             <div class="app-nav-links">
                 <a href="{{ route('records.index') }}" class="app-nav-link app-nav-link-records">Records</a>
                 <a href="{{ route('import.create') }}" class="app-nav-link app-nav-link-import">Import CSV/Excel</a>
+                <a href="{{ route('module-two.index') }}" class="app-nav-link app-nav-link-module">New System</a>
                 <form action="{{ route('lock') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="app-nav-link app-nav-link-lock">Lock system</button>
@@ -88,6 +89,8 @@
             box-shadow: 0 1px 2px rgba(99, 102, 241, 0.3);
         }
         .app-nav-link-import:hover { background: linear-gradient(135deg, #5558e3 0%, #4338ca 100%); box-shadow: 0 2px 4px rgba(99, 102, 241, 0.4); }
+        .app-nav-link-module { background: #fff; color: #334155; border: 1px solid #cbd5e1; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .app-nav-link-module:hover { background: #f8fafc; border-color: #94a3b8; color: #0ea5e9; }
         .app-nav-link-lock { background: #64748b; color: #fff; border: 1px solid #475569; }
         .app-nav-link-lock:hover { background: #475569; color: #fff; }
         .app-main { max-width: 72rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; }

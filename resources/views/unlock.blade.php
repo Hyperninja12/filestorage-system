@@ -165,6 +165,64 @@
     </style>
 </head>
 <body>
+    @if(session('requires_override_confirmation'))
+    <div class="unlock-override-modal" id="override-modal">
+        <div class="override-modal-content">
+            <h2 class="override-title">Device In Use</h2>
+            <p class="override-text">Another device is currently using the system. Logging in here will immediately log them out.</p>
+            <div class="override-actions">
+                <a href="{{ route('unlock') }}" class="override-btn-cancel">Cancel</a>
+                <button type="button" class="override-btn-confirm" onclick="forceLogin()">Force Login</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function forceLogin() {
+            var form = document.getElementById('unlock-form');
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'force';
+            input.value = '1';
+            form.appendChild(input);
+            form.submit();
+        }
+    </script>
+    <style>
+        .unlock-override-modal {
+            position: fixed; inset: 0; z-index: 10000;
+            background: rgba(15, 23, 42, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+        .override-modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem; border-radius: 1.25rem;
+            max-width: 24rem; width: 90%; text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: modal-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modal-pop {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .override-title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem; }
+        .override-text { font-size: 0.9375rem; color: #475569; margin: 0 0 1.5rem; line-height: 1.5; }
+        .override-actions { display: flex; gap: 0.75rem; justify-content: stretch; }
+        .override-btn-cancel, .override-btn-confirm {
+            flex: 1; padding: 0.75rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.9375rem;
+            cursor: pointer; text-decoration: none; text-align: center; border: none;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+        .override-btn-cancel { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        .override-btn-cancel:hover { background: #e2e8f0; }
+        .override-btn-confirm {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff;
+            box-shadow: 0 4px 14px -2px rgba(239, 68, 68, 0.4);
+        }
+        .override-btn-confirm:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(239, 68, 68, 0.45); }
+    </style>
+    @endif
     <div class="unlock-loading hidden" id="unlock-loading">
         <div class="unlock-loading-content">
             <div class="unlock-loading-spinner"></div>
@@ -182,7 +240,7 @@
         <form id="unlock-form" action="{{ route('unlock.submit') }}" method="POST">
             @csrf
             <div class="unlock-input-wrap">
-                <input type="password" name="password" id="unlock-password" class="unlock-input" placeholder="Enter password" required autofocus autocomplete="current-password">
+                <input type="password" name="password" id="unlock-password" class="unlock-input" placeholder="Enter password" value="{{ old('password') }}" required autofocus autocomplete="current-password">
                 <button type="button" class="unlock-toggle-eye" id="unlock-toggle-eye" title="Show password" aria-label="Show password">
                     <svg id="icon-eye" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
                     <svg id="icon-eye-slash" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="display:none;"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 15 3m0 0 18-18M6.228 6.228 21 3 21"/></svg>

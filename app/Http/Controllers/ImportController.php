@@ -124,7 +124,16 @@ class ImportController extends Controller
     private function isRowEmpty(array $row): bool
     {
         foreach ($row as $v) {
-            if ($v !== null && trim((string) $v) !== '') {
+            if ($v === null) {
+                continue;
+            }
+            // Strip invisible/unicode chars: zero-width space, non-breaking space, BOM, soft-hyphen, etc.
+            $clean = preg_replace('/[\x00-\x1F\x7F\xA0\xAD\x{200B}-\x{200D}\x{FEFF}]/u', '', (string) $v);
+            if ($clean === null) {
+                // Regex engine failed (unlikely) — fall back to basic trim.
+                $clean = $v;
+            }
+            if (trim($clean) !== '') {
                 return false;
             }
         }
@@ -271,7 +280,8 @@ class ImportController extends Controller
     }
 
     /**
-     * CSV: row 0 = headers, row 1 pataas = data. I-store ang records gamit ang header names nga keys.
+     * CSV: Scan rows to find the real header row (skips metadata rows at the top).
+     * Row after the detected header row pataas = data.
      */
     private function parseCsv($file): array
     {
@@ -281,14 +291,15 @@ class ImportController extends Controller
         }
         $utf8 = $this->fileContentsAsUtf8($path);
         $reader = Reader::createFromString($utf8);
-        $allRows = iterator_to_array($reader->getRecords());
+        $allRows = array_values(iterator_to_array($reader->getRecords()));
         if (empty($allRows)) {
             return ['headers' => [], 'rows' => []];
         }
-        $rawHeaders = array_map(fn ($c) => $this->normalizeHeaderCell((string) $c), array_values($allRows[0]));
+        $headerIdx = $this->findHeaderRowIndex($allRows);
+        $rawHeaders = array_map(fn ($c) => $this->normalizeHeaderCell((string) $c), array_values($allRows[$headerIdx]));
         $headers = $this->makeHeadersUnique($rawHeaders);
         $rows = [];
-        for ($i = 1; $i < count($allRows); $i++) {
+        for ($i = $headerIdx + 1; $i < count($allRows); $i++) {
             $row = [];
             $values = array_values($allRows[$i]);
             foreach ($headers as $j => $key) {
@@ -302,21 +313,24 @@ class ImportController extends Controller
     }
 
     /**
-     * Excel: row 0 = headers, row 1 pataas = data. I-store ang records gamit ang header names nga keys.
+     * Excel: Scan rows to find the real header row (skips metadata rows at the top).
+     * Row after the detected header row pataas = data.
      */
     private function parseExcel($file): array
     {
         $spreadsheet = IOFactory::load($file->getRealPath());
         $sheet = $spreadsheet->getActiveSheet();
-        $rows = $sheet->toArray(null, true, true, true);
+        // Re-index rows as 0-based array so findHeaderRowIndex() works correctly.
+        $rows = array_values($sheet->toArray(null, true, true, true));
         if (empty($rows)) {
             return ['headers' => [], 'rows' => []];
         }
-        $rawHeaders = array_values($rows[0]);
+        $headerIdx = $this->findHeaderRowIndex($rows);
+        $rawHeaders = array_values($rows[$headerIdx]);
         $rawHeaders = array_map(fn ($h) => $this->normalizeHeaderCell((string) $h) ?: null, $rawHeaders);
         $headers = $this->makeHeadersUnique($rawHeaders);
         $result = [];
-        for ($i = 1; $i < count($rows); $i++) {
+        for ($i = $headerIdx + 1; $i < count($rows); $i++) {
             $cells = array_values($rows[$i]);
             $row = [];
             foreach ($headers as $j => $key) {
@@ -327,6 +341,42 @@ class ImportController extends Controller
             }
         }
         return ['headers' => $headers, 'rows' => $result];
+    }
+
+    /**
+     * Scan through rows and return the index of the first row that contains
+     * at least 2 recognisable canonical column names (or their aliases).
+     * Falls back to 0 if no such row is found (original behaviour).
+     */
+    private function findHeaderRowIndex(array $rows): int
+    {
+        $canonical = RecordController::TABLE_COLUMNS;
+        $aliases   = $this->getHeaderAliases();
+
+        // Build a flat lookup of every recognised name (canonical + all aliases) in lowercase.
+        $knownNames = [];
+        foreach ($canonical as $col) {
+            $knownNames[] = strtolower(ImportRecord::normalizeColumnKey($col));
+            foreach ($aliases[$col] ?? [] as $alias) {
+                $knownNames[] = strtolower(ImportRecord::normalizeColumnKey($alias));
+            }
+        }
+        $knownNames = array_unique($knownNames);
+
+        foreach ($rows as $idx => $row) {
+            $matches = 0;
+            foreach ($row as $cell) {
+                $norm = strtolower(ImportRecord::normalizeColumnKey((string) $cell));
+                if ($norm !== '' && in_array($norm, $knownNames, true)) {
+                    $matches++;
+                    if ($matches >= 2) {
+                        return $idx;
+                    }
+                }
+            }
+        }
+
+        return 0; // fallback: assume first row is headers
     }
 
     /** Trim ug tangtangon ang UTF-8 BOM sa header cell aron mag-match ang keys sa display. */

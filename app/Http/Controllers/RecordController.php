@@ -22,6 +22,7 @@ class RecordController extends Controller
     public const MANUAL_CREATE_OPTIONAL_COLUMNS = [
         'Subcategory',
         'Area Location',
+        'Inventory Item No.',
     ];
 
     /** Mga column sa table (fixed) para sa PPE report, sunod sa display. Gamit sa index, show, ug edit views. */
@@ -33,6 +34,7 @@ class RecordController extends Controller
         'Description',
         'Date of Purchase',
         'Property No.',
+        'Inventory Item No.',
         'PO No.',
         'Unit',
         'Qty',
@@ -75,6 +77,11 @@ class RecordController extends Controller
         }
 
         $records = $query->oldest()->paginate(15)->withQueryString();
+
+        if ($records->currentPage() > $records->lastPage() && $records->lastPage() > 0) {
+            return redirect()->to($request->fullUrlWithQuery(['page' => $records->lastPage()]));
+        }
+
         $headers = self::TABLE_COLUMNS;
         return view('records.index', compact('records', 'headers', 'type'));
     }
@@ -230,6 +237,7 @@ class RecordController extends Controller
             'description' => $record->getColumn('Description') ?: '—',
             'date_of_purchase' => $datePurchase ? $this->formatDateForPrint($datePurchase) : '—',
             'property_no' => $record->getColumn('Property No.') ?: '—',
+            'inventory_item_no' => $record->getColumn('Inventory Item No.') ?: '—',
             'po_no' => $record->getColumn('PO No.') ?: '—',
             'unit_value' => CashFormatter::formatOrPlaceholder($unitValue),
             'on_hand_value' => CashFormatter::formatOrPlaceholder($record->getColumn('On Hand Value')),
@@ -372,7 +380,7 @@ class RecordController extends Controller
             if ($value === null || (is_string($value) && trim($value) === '')) {
                 return;
             }
-            if ($this->parseFlexibleMoneyToInt((string) $value) === null) {
+            if ($this->parseFlexibleMoneyToFloat((string) $value) === null) {
                 $label = $attribute === 'Unit Value' ? 'Unit Value' : 'On Hand Value';
                 $fail("{$label} must be a valid cash amount (e.g. 1,234.00 or ₱1,234).");
             }
@@ -405,7 +413,7 @@ class RecordController extends Controller
                     $normalized[$col] = null;
                     continue;
                 }
-                $normalized[$col] = $this->parseFlexibleMoneyToInt($s) ?? 0;
+                $normalized[$col] = $this->parseFlexibleMoneyToFloat($s) ?? 0.0;
                 continue;
             }
 
@@ -416,9 +424,9 @@ class RecordController extends Controller
     }
 
     /**
-     * Parse values like "1,234.56" or "1234" into a non-negative int (rounded). Returns null if invalid.
+     * Parse values like "1,234.56" or "1234" into a non-negative float. Returns null if invalid.
      */
-    private function parseFlexibleMoneyToInt(string $raw): ?int
+    private function parseFlexibleMoneyToFloat(string $raw): ?float
     {
         $s = trim($raw);
         if ($s === '') {
@@ -436,7 +444,7 @@ class RecordController extends Controller
             return null;
         }
 
-        return (int) round($num);
+        return round($num, 2);
     }
 
     /**

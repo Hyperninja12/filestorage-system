@@ -72,6 +72,19 @@
                                             if ($col === 'Date of Purchase') {
                                                 $inputType = 'date';
                                                 $placeholder = '';
+                                                if ($fieldValue) {
+                                                    $str = trim((string) $fieldValue);
+                                                    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})/', $str, $m)) {
+                                                        $fieldValue = "{$m[1]}-{$m[2]}-{$m[3]}";
+                                                    } elseif (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $str, $m)) {
+                                                        // Fallback matching to assume mm/dd/yyyy like most imported spreadsheets
+                                                        $fieldValue = \Carbon\Carbon::createFromFormat('m/d/Y', $str)?->format('Y-m-d') ?? $fieldValue;
+                                                    } else {
+                                                        try {
+                                                            $fieldValue = \Carbon\Carbon::parse($str)->format('Y-m-d');
+                                                        } catch (\Exception $e) {}
+                                                    }
+                                                }
                                             } elseif ($col === 'Account Code') {
                                                 $inputPattern = '\d-\d{2}-\d{2}-\d{3}';
                                                 $inputTitle = 'Digits only — dashes are added automatically (0-00-00-000)';

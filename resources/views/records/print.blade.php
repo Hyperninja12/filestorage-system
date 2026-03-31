@@ -59,6 +59,7 @@
         <tr><th>DESCRIPTION</th><td>{!! nl2br(e($data['description'] ?? '—')) !!}</td></tr>
         <tr><th>DATE OF PURCHASE</th><td>{{ $data['date_of_purchase'] ?? '—' }}</td></tr>
         <tr><th>PROPERTY NUMBER</th><td>{{ $data['property_no'] ?? '—' }}</td></tr>
+        <tr><th>INVENTORY ITEM NO.</th><td>{{ $data['inventory_item_no'] ?? '—' }}</td></tr>
         <tr><th>P.O NUMBER</th><td>{{ $data['po_no'] ?? '—' }}</td></tr>
         <tr><th>UNIT VALUE</th><td>{{ $data['unit_value'] ?? '—' }}</td></tr>
         <tr><th>ON HAND VALUE</th><td>{{ $data['on_hand_value'] ?? '—' }}</td></tr>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
+use Illuminate\Support\Facades\Cache;
 
 class UnlockController extends Controller
 {
@@ -72,6 +73,14 @@ class UnlockController extends Controller
             return back()->withErrors(['password' => 'Wrong password. Please try again.']);
         }
 
+        $activeSessionId = Cache::get('active_system_session_id');
+        $currentSessionId = session()->getId();
+
+        if ($activeSessionId && $activeSessionId !== $currentSessionId && ! $request->has('force')) {
+            return back()->with('requires_override_confirmation', true)->withInput();
+        }
+
+        Cache::put('active_system_session_id', $currentSessionId, now()->addMinutes(config('session.lifetime', 120)));
         session(['system_unlocked' => true]);
 
         // So the Records page can play a short "unlock" transition animation.
@@ -109,6 +118,10 @@ class UnlockController extends Controller
      */
     public function lock(Request $request)
     {
+        if (Cache::get('active_system_session_id') === session()->getId()) {
+            Cache::forget('active_system_session_id');
+        }
+
         $request->session()->forget('system_unlocked');
 
         return redirect('/unlock');

@@ -25,6 +25,10 @@ Route::middleware(['system.lock'])->group(function (): void {
     Route::get('/import', [ImportController::class, 'create'])->name('import.create');
     Route::post('/import', [ImportController::class, 'store'])->name('import.store');
 
+    Route::get('/module-two', function () {
+        return view('module-two.index');
+    })->name('module-two.index');
+
     Route::get('/records', [RecordController::class, 'index'])->name('records.index');
     Route::get('/records/create', [RecordController::class, 'create'])->name('records.create');
     Route::post('/records', [RecordController::class, 'store'])->name('records.store');
