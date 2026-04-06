@@ -48,7 +48,7 @@ class RecordController extends Controller
         'Remarks',
     ];
 
-    public function index(Request $request)
+    private function buildRecordsQuery(Request $request)
     {
         $query = ImportRecord::with('importBatch');
 
@@ -76,6 +76,14 @@ class RecordController extends Controller
             $query->whereRaw(self::unitValueRawCondition($type));
         }
 
+        return $query;
+    }
+
+    public function index(Request $request)
+    {
+        $query = $this->buildRecordsQuery($request);
+        $type = $request->get('type', 'all');
+
         $records = $query->oldest()->paginate(15)->withQueryString();
 
         if ($records->currentPage() > $records->lastPage() && $records->lastPage() > 0) {
@@ -91,6 +99,19 @@ class RecordController extends Controller
         $record->load('importBatch');
         $columns = self::TABLE_COLUMNS;
         return view('records.show', compact('record', 'columns'));
+    }
+
+    public function printList(Request $request)
+    {
+        $query = $this->buildRecordsQuery($request);
+        $type = $request->get('type', 'all');
+        $personResponsible = $request->get('person_responsible');
+
+        // Fetch all matching records without pagination for printing
+        $records = $query->oldest()->get();
+        $headers = self::TABLE_COLUMNS;
+
+        return view('records.print-list', compact('records', 'headers', 'type', 'personResponsible'));
     }
 
     /**

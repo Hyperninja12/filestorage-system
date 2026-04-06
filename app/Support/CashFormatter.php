@@ -4,6 +4,7 @@ namespace App\Support;
 
 /**
  * Display Unit Value / On Hand Value as cash (₱1,234.00). Parsing tolerates ints, floats, and numeric strings.
+ * Preserves the original decimal precision from CSV data — no rounding.
  */
 final class CashFormatter
 {
@@ -25,6 +26,22 @@ final class CashFormatter
     }
 
     /**
+     * Count the number of decimal places in the original raw value.
+     * Returns at least 2 so that whole numbers still show as e.g. 1,234.00.
+     */
+    private static function decimalPlaces(mixed $raw): int
+    {
+        $s = trim((string) $raw);
+        // Strip commas / whitespace but keep the decimal point
+        $s = str_replace(',', '', preg_replace('/\s+/', '', $s) ?? '');
+        $dotPos = strpos($s, '.');
+        if ($dotPos === false) {
+            return 2; // no decimals → default to 2
+        }
+        return max(2, strlen($s) - $dotPos - 1);
+    }
+
+    /**
      * @param  bool  $includeSymbol  Prefix with ₱ (Philippine peso).
      */
     public static function format(mixed $raw, bool $includeSymbol = true): string
@@ -33,7 +50,8 @@ final class CashFormatter
         if ($n === null) {
             return '';
         }
-        $formatted = number_format($n, 2, '.', ',');
+        $decimals = self::decimalPlaces($raw);
+        $formatted = number_format($n, $decimals, '.', ',');
 
         return $includeSymbol ? ('₱' . $formatted) : $formatted;
     }
@@ -46,7 +64,7 @@ final class CashFormatter
     }
 
     /**
-     * Value for text inputs: no symbol, two decimals, thousands commas (e.g. 1,234.00).
+     * Value for text inputs: no symbol, original decimals preserved, thousands commas.
      */
     public static function formatForInput(mixed $raw): string
     {
@@ -55,7 +73,8 @@ final class CashFormatter
         }
         $n = self::toFloat($raw);
         if ($n !== null) {
-            return number_format($n, 2, '.', ',');
+            $decimals = self::decimalPlaces($raw);
+            return number_format($n, $decimals, '.', ',');
         }
 
         return trim((string) $raw);
