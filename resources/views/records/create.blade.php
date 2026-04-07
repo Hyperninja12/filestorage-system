@@ -114,7 +114,7 @@
             var modal = document.getElementById('record-insert-confirm');
             if (!form || !modal) return;
             function openModal() {
-                if (typeof window.hideAppGlobalLoading === 'function') {
+                if (typeof window.hideAppGlobalLoading === 'function') {    
                     window.hideAppGlobalLoading();
                 }
                 modal.classList.remove('record-insert-confirm-hidden');

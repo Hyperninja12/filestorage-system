@@ -217,7 +217,7 @@
             };
             document.body.addEventListener('click', function(e) {
                 var a = e.target.closest('a[href]');
-                if (a && a.href && a.target !== '_blank' && !a.href.startsWith('javascript:')) {
+                if (a && a.href && a.target !== '_blank' && !a.href.startsWith('javascript:') && a.getAttribute('data-no-app-loading') === null) {
                     try {
                         var url = new URL(a.href);
                         if (url.origin === location.origin) show();

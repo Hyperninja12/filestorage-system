@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ImportBatch;
 use App\Models\ImportRecord;
 use App\Support\CashFormatter;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -107,11 +108,22 @@ class RecordController extends Controller
         $type = $request->get('type', 'all');
         $personResponsible = $request->get('person_responsible');
 
-        // Fetch all matching records without pagination for printing
+        // Fetch all matching records without pagination for PDF
         $records = $query->oldest()->get();
         $headers = self::TABLE_COLUMNS;
 
-        return view('records.print-list', compact('records', 'headers', 'type', 'personResponsible'));
+        $pdf = Pdf::loadView('records.print-list', compact('records', 'headers', 'type', 'personResponsible'));
+
+        // Long Bond Paper: 8.5in x 13in in Landscape orientation
+        $pdf->setPaper([0, 0, 612, 936], 'landscape');
+
+        $filename = 'Records';
+        if ($personResponsible) {
+            $filename .= '_' . str_replace(' ', '_', $personResponsible);
+        }
+        $filename .= '_' . date('Y-m-d') . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     /**
