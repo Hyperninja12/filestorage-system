@@ -59,7 +59,7 @@ class RecordController extends Controller
                 'SELECT DISTINCT import_records.id FROM import_records CROSS JOIN json_each(import_records.row_data) AS je WHERE je.value LIKE ?',
                 [$search]
             );
-            $idList = array_map(fn ($row) => is_object($row) ? $row->id : $row['id'], $ids);
+            $idList = array_map(fn($row) => is_object($row) ? $row->id : $row['id'], $ids);
             if (empty($idList)) {
                 $query->whereRaw('1 = 0');
             } else {
@@ -91,8 +91,13 @@ class RecordController extends Controller
             return redirect()->to($request->fullUrlWithQuery(['page' => $records->lastPage()]));
         }
 
+        // Stats for the header dashboard
+        $totalCount = ImportRecord::count();
+        $parCount = ImportRecord::whereRaw(self::unitValueRawCondition('par'))->count();
+        $icsCount = ImportRecord::whereRaw(self::unitValueRawCondition('ics'))->count();
+
         $headers = self::TABLE_COLUMNS;
-        return view('records.index', compact('records', 'headers', 'type'));
+        return view('records.index', compact('records', 'headers', 'type', 'totalCount', 'parCount', 'icsCount'));
     }
 
     public function show(ImportRecord $record)
@@ -187,7 +192,7 @@ class RecordController extends Controller
                     break;
                 }
             }
-            if (! $found) {
+            if (!$found) {
                 $data[$col] = $value;
             }
         }
@@ -241,11 +246,11 @@ class RecordController extends Controller
     {
         $paths = $record->getImagePaths();
         $idx = $index ?? 0;
-        if (! isset($paths[$idx])) {
+        if (!isset($paths[$idx])) {
             abort(404);
         }
         $path = Storage::disk('public')->path($paths[$idx]);
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             abort(404);
         }
         return response()->file($path);
@@ -319,7 +324,7 @@ class RecordController extends Controller
         $fingerprintMap = [];
         foreach ($input as $k => $v) {
             $fp = $this->requestKeyFingerprint((string) $k);
-            if ($fp !== '' && ! array_key_exists($fp, $fingerprintMap)) {
+            if ($fp !== '' && !array_key_exists($fp, $fingerprintMap)) {
                 $fingerprintMap[$fp] = $v;
             }
         }
@@ -391,7 +396,7 @@ class RecordController extends Controller
                 continue;
             }
             $isOptional = in_array($col, $optionalCols, true);
-            $required = $requireAllFieldsForCreate && ! $isOptional;
+            $required = $requireAllFieldsForCreate && !$isOptional;
             $rules[$this->validationRuleAttribute($col)] = $required ? ['required', 'string'] : ['nullable', 'string'];
         }
 
@@ -469,7 +474,7 @@ class RecordController extends Controller
         $s = trim($s);
         $s = str_replace(',', '', $s);
         $s = preg_replace('/\s+/', '', $s) ?? $s;
-        if ($s === '' || ! is_numeric($s)) {
+        if ($s === '' || !is_numeric($s)) {
             return null;
         }
         $num = (float) $s;
@@ -489,7 +494,8 @@ class RecordController extends Controller
         $op = $type === 'par' ? '>=' : '<';
         $th = self::PAR_ICS_THRESHOLD;
         $path = "'\$.\"Unit Value\"'";
-        $expr = "CAST(REPLACE(REPLACE(COALESCE(TRIM(CAST(json_extract(row_data, {$path}) AS TEXT)), '0'), ',', ''), ' ', '') AS REAL)";
+        // Strip ₱, spaces, and commas before casting to REAL for comparison
+        $expr = "CAST(REPLACE(REPLACE(REPLACE(COALESCE(TRIM(CAST(json_extract(row_data, {$path}) AS TEXT)), '0'), '₱', ''), ',', ''), ' ', '') AS REAL)";
         return "({$expr} {$op} {$th})";
     }
 
