@@ -190,6 +190,7 @@
 
 @push('styles')
     <style>
+    <style>
         .record-edit {}
 
         .record-edit .app-back-btn {
@@ -197,30 +198,32 @@
         }
 
         .record-edit-card {
-            background: #fff;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
             border-radius: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
             overflow: hidden;
             max-width: 56rem;
         }
 
         .record-edit-header {
             padding: 1.25rem 1.5rem;
-            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-            border-bottom: 1px solid #e2e8f0;
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
         }
 
         .record-edit-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #f8fafc;
             margin: 0;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
         .record-edit-subtitle {
             font-size: 0.875rem;
-            color: #64748b;
+            color: #94a3b8;
             margin: 0.25rem 0 0;
         }
 
@@ -229,9 +232,9 @@
             padding: 0.75rem 1rem;
             font-size: 0.875rem;
             line-height: 1.45;
-            color: #1e40af;
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border: 1px solid #93c5fd;
+            color: #7dd3fc;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
             border-radius: 0.5rem;
         }
 
@@ -248,8 +251,8 @@
             gap: 0.75rem;
             flex-wrap: wrap;
             padding: 1.25rem 1.5rem;
-            border-top: 1px solid #e2e8f0;
-            background: #f8fafc;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            background: rgba(5, 5, 17, 0.6);
         }
 
         .record-edit-btn {
@@ -260,25 +263,32 @@
             text-decoration: none;
             border: 1px solid transparent;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .record-edit-btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            color: #fff;
+            background: rgba(0, 240, 255, 0.15);
+            color: #00f0ff;
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
 
         .record-edit-btn-primary:hover {
-            opacity: 0.95;
+            background: rgba(0, 240, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            color: #fff;
         }
 
         .record-edit-btn-secondary {
-            background: #fff;
-            color: #475569;
-            border-color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.6);
+            color: #94a3b8;
+            border-color: rgba(148, 163, 184, 0.4);
         }
 
         .record-edit-btn-secondary:hover {
-            background: #f8fafc;
+            background: rgba(148, 163, 184, 0.15);
+            color: #f8fafc;
         }
 
         .edit-table {
@@ -291,44 +301,53 @@
             padding: 0.75rem 1.25rem;
             text-align: left;
             font-weight: 600;
-            color: #475569;
-            background: #f8fafc;
-            border-right: 1px solid #e2e8f0;
+            color: #00f0ff;
+            background: rgba(15, 23, 42, 0.8);
+            border-right: 1px solid rgba(0, 240, 255, 0.15);
             vertical-align: middle;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
         }
 
         .edit-table-td {
             padding: 0.75rem 1.25rem;
-            background: #fff;
+            background: transparent;
             vertical-align: middle;
         }
 
         .edit-table-tr:nth-child(even) .edit-table-th {
-            background: #f1f5f9;
+            background: rgba(5, 5, 17, 0.6);
         }
 
         .edit-table-tr:nth-child(even) .edit-table-td {
-            background: #fafafa;
+            background: rgba(15, 23, 42, 0.4);
         }
 
         .edit-table-input {
             width: 100%;
             padding: 0.5rem 0.75rem;
-            border: 1px solid #cbd5e1;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            background: rgba(15, 23, 42, 0.8);
+            color: #e2e8f0;
             border-radius: 0.5rem;
             font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .edit-table-input::placeholder {
+            color: #64748b;
         }
 
         .edit-table-input:focus {
             outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+            border-color: #00f0ff;
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2), 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
         .edit-table-error {
             margin-top: 0.25rem;
             font-size: 0.8125rem;
-            color: #b91c1c;
+            color: #fca5a5;
+            text-shadow: 0 0 5px rgba(239, 68, 68, 0.8);
         }
 
         .record-insert-confirm {
@@ -348,8 +367,8 @@
         .record-insert-confirm-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(4px);
+            background: rgba(5, 5, 17, 0.85);
+            backdrop-filter: blur(8px);
         }
 
         .record-insert-confirm-panel {
@@ -357,10 +376,11 @@
             max-width: 22rem;
             width: 100%;
             padding: 1.5rem;
-            background: #fff;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
             border-radius: 1rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
             animation: recordInsertPop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -380,12 +400,13 @@
             width: 2.75rem;
             height: 2.75rem;
             margin: 0 auto 1rem;
-            color: #4f46e5;
-            background: #eef2ff;
+            color: #0a0a0a;
+            background: #00f0ff;
             border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
         }
 
         .record-insert-confirm-icon svg {
@@ -396,14 +417,15 @@
         .record-insert-confirm-title {
             font-size: 1.125rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #f8fafc;
             margin: 0 0 0.5rem;
             text-align: center;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
         .record-insert-confirm-text {
             font-size: 0.875rem;
-            color: #64748b;
+            color: #94a3b8;
             margin: 0 0 1.25rem;
             line-height: 1.5;
             text-align: center;
@@ -423,26 +445,31 @@
             font-weight: 600;
             cursor: pointer;
             border: 1px solid transparent;
+            transition: all 0.2s;
         }
 
         .record-insert-confirm-btn-secondary {
-            background: #fff;
-            color: #475569;
-            border-color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.6);
+            color: #94a3b8;
+            border-color: rgba(148, 163, 184, 0.4);
         }
 
         .record-insert-confirm-btn-secondary:hover {
-            background: #f8fafc;
+            background: rgba(148, 163, 184, 0.15);
+            color: #f8fafc;
         }
 
         .record-insert-confirm-btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            color: #fff;
-            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+            background: rgba(0, 240, 255, 0.15);
+            color: #00f0ff;
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
 
         .record-insert-confirm-btn-primary:hover {
-            opacity: 0.95;
+            background: rgba(0, 240, 255, 0.3);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
         }
     </style>
 @endpush

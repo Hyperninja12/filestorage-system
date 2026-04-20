@@ -21,7 +21,7 @@
     @stack('styles')
 </head>
 
-<body class="app-body text-gray-900 min-h-screen">
+<body class="app-body text-slate-100 min-h-screen bg-slate-950">
     <div class="app-loading hidden" id="app-loading">
         <div class="app-loading-content">
             <div class="app-loading-spinner"></div>
@@ -113,24 +113,25 @@
 
     <style>
         .app-body {
-            background-color: #f0efff !important;
+            background-color: #050511 !important;
             background-image:
-                radial-gradient(ellipse at 60% 0%, rgba(167, 139, 250, 0.22) 0%, transparent 55%),
-                radial-gradient(ellipse at 0% 80%, rgba(99, 102, 241, 0.10) 0%, transparent 50%),
-                linear-gradient(160deg, #f0efff 0%, #f5f3ff 40%, #faf9ff 100%) !important;
+                radial-gradient(ellipse at 15% 0%, rgba(0, 240, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 85% 100%, rgba(191, 0, 255, 0.15) 0%, transparent 40%),
+                linear-gradient(160deg, #050511 0%, #0a0b15 40%, #03040a 100%) !important;
             background-attachment: fixed !important;
             min-height: 100vh !important;
+            color: #e2e8f0 !important;
         }
 
         .app-nav {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(240, 237, 255, 0.72);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(167, 139, 250, 0.25);
-            box-shadow: 0 1px 12px rgba(124, 58, 237, 0.07);
+            background: rgba(5, 5, 17, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
         }
 
         .app-nav-inner {
@@ -144,12 +145,14 @@
 
         .app-nav-brand {
             font-size: 1.125rem;
-            font-weight: 600;
-            color: #1e293b;
+            font-weight: 700;
+            color: #e2e8f0;
             display: flex;
             align-items: center;
             gap: 0.75rem;
             text-decoration: none;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
         }
 
         .app-nav-logo {
@@ -157,7 +160,8 @@
             height: 44px;
             object-fit: cover;
             border-radius: 9999px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            border: 1px solid rgba(0, 240, 255, 0.5);
         }
 
         .app-nav-links {
@@ -173,29 +177,29 @@
             width: 2.75rem;
             height: 2.75rem;
             border-radius: 9999px;
-            color: #6d28d9;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #94a3b8;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            background: rgba(245, 243, 255, 0.65);
-            border: 1px solid rgba(167, 139, 250, 0.3);
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.15);
             cursor: pointer;
             text-decoration: none;
             backdrop-filter: blur(8px);
         }
 
         .app-nav-icon-link:hover {
-            background: rgba(237, 233, 255, 0.9);
-            color: #5b21b6;
-            transform: translateY(-1.5px);
-            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.18);
-            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            border-color: rgba(0, 240, 255, 0.5);
         }
 
         .app-nav-icon-link-active {
-            background: rgba(221, 214, 254, 0.75);
-            color: #5b21b6;
-            border-color: rgba(139, 92, 246, 0.55);
-            box-shadow: 0 0 14px rgba(124, 58, 237, 0.18);
+            background: rgba(0, 240, 255, 0.15);
+            color: #00f0ff;
+            border-color: rgba(0, 240, 255, 0.6);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
         }
 
         .app-nav-icon-link svg {
@@ -217,18 +221,21 @@
             font-size: 0.875rem;
             transition: opacity 0.5s ease;
             opacity: 1;
+            backdrop-filter: blur(8px);
         }
 
         .app-alert-success {
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #065f46;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
         }
 
         .app-alert-error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
         }
 
         .app-back-btn {
@@ -238,19 +245,22 @@
             padding: 0.5rem 1rem;
             font-size: 0.875rem;
             font-weight: 600;
-            color: #4f46e5;
-            background: #eef2ff;
-            border: 1px solid #c7d2fe;
+            color: #00f0ff;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(0, 240, 255, 0.2);
             border-radius: 0.5rem;
             text-decoration: none;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
         }
 
         .app-back-btn:hover {
-            background: #e0e7ff;
-            border-color: #a5b4fc;
-            color: #3730a3;
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.4);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
         }
 
         .app-back-btn svg {
@@ -260,7 +270,8 @@
         .app-loading {
             position: fixed;
             inset: 0;
-            background: rgba(232, 246, 243, 0.92);
+            background: rgba(5, 5, 17, 0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -278,26 +289,28 @@
         .app-loading-spinner {
             width: 2.5rem;
             height: 2.5rem;
-            border: 3px solid #e2e8f0;
-            border-top-color: #0ea5e9;
+            border: 3px solid rgba(0, 240, 255, 0.1);
+            border-top-color: #00f0ff;
             border-radius: 50%;
             animation: app-spin 0.8s linear infinite;
             margin: 0 auto 1rem;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
         }
 
         .app-loading-text {
             font-size: 0.9375rem;
             font-weight: 600;
-            color: #334155;
+            color: #00f0ff;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+            letter-spacing: 0.05em;
         }
 
         /* Premium staggered entry animations */
         @keyframes pageEnter {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(15px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -305,7 +318,7 @@
         }
 
         .animate-staggered {
-            animation: pageEnter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+            animation: pageEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
 
         @keyframes app-spin {
@@ -331,8 +344,8 @@
         .app-confirm-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(4px);
+            background: rgba(5, 5, 17, 0.7);
+            backdrop-filter: blur(8px);
         }
 
         .app-confirm-panel {
@@ -340,28 +353,31 @@
             width: 100%;
             max-width: 22rem;
             padding: 1.5rem;
-            background: #fff;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
             border-radius: 1rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 240, 255, 0.1);
             text-align: center;
         }
 
         .app-confirm-panel--danger {
-            border-top: 4px solid #dc2626;
+            border-top: 2px solid #ef4444;
+            border-color: rgba(239, 68, 68, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(239, 68, 68, 0.15);
         }
 
         .app-confirm-title {
             font-size: 1.125rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #f8fafc;
             margin: 0 0 0.5rem;
             line-height: 1.3;
         }
 
         .app-confirm-message {
             font-size: 0.875rem;
-            color: #64748b;
+            color: #cbd5e1;
             margin: 0 0 1.25rem;
             line-height: 1.5;
             text-align: center;
@@ -382,36 +398,43 @@
             font-weight: 600;
             cursor: pointer;
             border: 1px solid transparent;
+            transition: all 0.2s;
         }
 
         .app-confirm-btn-cancel {
-            background: #fff;
-            color: #475569;
-            border-color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .app-confirm-btn-cancel:hover {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .app-confirm-btn-ok-danger {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            color: #fff;
-            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
         }
 
         .app-confirm-btn-ok-danger:hover {
-            opacity: 0.95;
+            background: rgba(239, 68, 68, 0.25);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            color: #fff;
         }
 
         .app-confirm-btn-ok-neutral {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            color: #fff;
-            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+            background: rgba(0, 240, 255, 0.15);
+            color: #67e8f9;
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
 
         .app-confirm-btn-ok-neutral:hover {
-            opacity: 0.95;
+            background: rgba(0, 240, 255, 0.25);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            color: #fff;
         }
     </style>
     <script>

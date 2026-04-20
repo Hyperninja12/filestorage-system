@@ -32,29 +32,29 @@
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 animate-staggered" style="animation-delay: 100ms;">
         <div class="flex flex-col sm:flex-row sm:items-center gap-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 leading-tight tracking-tight">Records</h1>
-                <p class="text-sm text-gray-500 mt-1">Search, view, and manage imported data</p>
+                <h1 class="text-2xl font-bold text-white leading-tight tracking-tight text-shadow-glow">Records</h1>
+                <p class="text-sm text-cyan-200/70 mt-1">Search, view, and manage imported data</p>
             </div>
 
             {{-- Summary Stats Badges --}}
             <div class="flex items-center gap-3">
-                <div class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg shadow-sm flex items-center gap-2">
-                    <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Total</span>
-                    <span class="text-sm font-bold text-gray-900">{{ number_format($totalCount ?? 0) }}</span>
+                <div class="px-3 py-1.5 futuristic-card rounded-lg flex items-center gap-2">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total</span>
+                    <span class="text-sm font-bold text-white">{{ number_format($totalCount ?? 0) }}</span>
                 </div>
-                <div class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg shadow-sm flex items-center gap-2">
-                    <span class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">PAR</span>
-                    <span class="text-sm font-bold text-gray-900">{{ number_format($parCount ?? 0) }}</span>
+                <div class="px-3 py-1.5 futuristic-card rounded-lg flex items-center gap-2">
+                    <span class="text-[10px] uppercase font-bold text-cyan-400 tracking-wider text-shadow-glow">PAR</span>
+                    <span class="text-sm font-bold text-white">{{ number_format($parCount ?? 0) }}</span>
                 </div>
-                <div class="px-3 py-1.5 bg-white border border-gray-200 rounded-lg shadow-sm flex items-center gap-2">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">ICS</span>
-                    <span class="text-sm font-bold text-gray-900">{{ number_format($icsCount ?? 0) }}</span>
+                <div class="px-3 py-1.5 futuristic-card rounded-lg flex items-center gap-2">
+                    <span class="text-[10px] uppercase font-bold text-purple-400 tracking-wider text-shadow-glow">ICS</span>
+                    <span class="text-sm font-bold text-white">{{ number_format($icsCount ?? 0) }}</span>
                 </div>
             </div>
         </div>
 
         <a href="{{ route('records.create') }}"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold rounded-lg shadow-[0_0_15px_rgba(6,182,212,0.4)] border border-cyan-400/50 hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] transition-all transform hover:-translate-y-0.5">
             <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke-width="2.5" stroke="currentColor" width="20" height="20">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -67,29 +67,29 @@
     @php $currentType = $type ?? request('type', 'all'); @endphp
     {{-- PAR / ICS switch: Segmented Control with counts --}}
     <div class="flex items-center gap-3 mb-8 animate-staggered" style="animation-delay: 200ms;">
-        <span class="text-sm font-semibold text-gray-500">Filter By:</span>
-        <div class="inline-flex p-1 bg-gray-200/50 rounded-xl backdrop-blur-sm border border-gray-200">
+        <span class="text-sm font-semibold text-slate-400">Filter By:</span>
+        <div class="inline-flex p-1 bg-slate-900/50 rounded-xl backdrop-blur-md border border-cyan-900/50 shadow-[0_0_15px_rgba(0,240,255,0.05)]">
             <a href="{{ route('records.index', array_merge(request()->only(['search', 'person_responsible']), ['type' => 'all'])) }}"
-                class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all {{ $currentType === 'all' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50' }}">
+                class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all {{ $currentType === 'all' ? 'bg-cyan-900/40 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)] border border-cyan-500/30' : 'text-slate-400 hover:text-cyan-200 hover:bg-slate-800/50' }}">
                 <span>All Records</span>
                 <span
-                    class="px-1.5 py-0.5 rounded-full text-[10px] {{ $currentType === 'all' ? 'bg-indigo-50 text-indigo-600' : 'bg-gray-300/50 text-gray-500' }}">
+                    class="px-1.5 py-0.5 rounded-full text-[10px] {{ $currentType === 'all' ? 'bg-cyan-500/20 text-cyan-300' : 'bg-slate-800/80 text-slate-500' }}">
                     {{ $totalCount ?? 0 }}
                 </span>
             </a>
             <a href="{{ route('records.index', array_merge(request()->only(['search', 'person_responsible']), ['type' => 'par'])) }}"
-                class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all {{ $currentType === 'par' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50' }}">
+                class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all {{ $currentType === 'par' ? 'bg-cyan-900/40 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)] border border-cyan-500/30' : 'text-slate-400 hover:text-cyan-200 hover:bg-slate-800/50' }}">
                 <span>PAR</span>
                 <span
-                    class="px-1.5 py-0.5 rounded-full text-[10px] {{ $currentType === 'par' ? 'bg-indigo-50 text-indigo-600' : 'bg-gray-300/50 text-gray-500' }}">
+                    class="px-1.5 py-0.5 rounded-full text-[10px] {{ $currentType === 'par' ? 'bg-cyan-500/20 text-cyan-300' : 'bg-slate-800/80 text-slate-500' }}">
                     {{ $parCount ?? 0 }}
                 </span>
             </a>
             <a href="{{ route('records.index', array_merge(request()->only(['search', 'person_responsible']), ['type' => 'ics'])) }}"
-                class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all {{ $currentType === 'ics' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50' }}">
+                class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-all {{ $currentType === 'ics' ? 'bg-cyan-900/40 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)] border border-cyan-500/30' : 'text-slate-400 hover:text-cyan-200 hover:bg-slate-800/50' }}">
                 <span>ICS</span>
                 <span
-                    class="px-1.5 py-0.5 rounded-full text-[10px] {{ $currentType === 'ics' ? 'bg-indigo-50 text-indigo-600' : 'bg-gray-300/50 text-gray-500' }}">
+                    class="px-1.5 py-0.5 rounded-full text-[10px] {{ $currentType === 'ics' ? 'bg-cyan-500/20 text-cyan-300' : 'bg-slate-800/80 text-slate-500' }}">
                     {{ $icsCount ?? 0 }}
                 </span>
             </a>
@@ -97,10 +97,10 @@
     </div>
 
     {{-- Search & Filter Bar --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 overflow-hidden animate-staggered" style="animation-delay: 300ms;">
+    <div class="futuristic-card rounded-xl mb-6 overflow-hidden animate-staggered" style="animation-delay: 300ms;">
         <div
-            class="flex items-center gap-2 px-5 py-3.5 bg-gray-50/80 border-b border-gray-100 text-sm font-semibold text-gray-700">
-            <svg class="w-4 h-4 text-indigo-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+            class="flex items-center gap-2 px-5 py-3.5 bg-slate-800/80 border-b border-cyan-900/30 text-sm font-semibold text-cyan-300">
+            <svg class="w-4 h-4 text-cyan-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
@@ -113,10 +113,10 @@
             @endif
 
             <div class="w-full md:flex-1 relative">
-                <label for="search" class="block text-xs font-semibold text-gray-500 mb-1.5">Search (any column)</label>
+                <label for="search" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 text-shadow-glow">Search (any column)</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -124,16 +124,16 @@
                     </div>
                     <input type="text" name="search" id="search" value="{{ request('search') }}"
                         placeholder="Type to search..."
-                        class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                        class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                 </div>
             </div>
 
             <div class="w-full md:flex-1 relative">
-                <label for="person_responsible" class="block text-xs font-semibold text-gray-500 mb-1.5">By Person
+                <label for="person_responsible" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 text-shadow-glow">By Person
                     Responsible</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -141,20 +141,20 @@
                     </div>
                     <input type="text" name="person_responsible" id="person_responsible"
                         value="{{ request('person_responsible') }}" placeholder="Name or part of name"
-                        class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                        class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                 </div>
             </div>
 
             <div class="flex items-center gap-2 mt-2 md:mt-0">
                 <button type="submit"
-                    class="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-900 focus:outline-none">Search</button>
+                    class="px-5 py-2 bg-cyan-900/40 hover:bg-cyan-800/60 text-cyan-300 border border-cyan-500/50 text-sm font-medium rounded-lg transition-all focus:ring-2 focus:ring-cyan-500 focus:outline-none shadow-[0_0_10px_rgba(0,240,255,0.1)] hover:shadow-[0_0_15px_rgba(0,240,255,0.3)]">Search</button>
                 @if (request()->hasAny(['search', 'person_responsible', 'type']))
                     <a href="{{ route('records.index') }}"
-                        class="px-5 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-300 focus:outline-none">Clear</a>
+                        class="px-5 py-2 bg-slate-800 border border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-slate-500 focus:outline-none">Clear</a>
                 @endif
                 @if (request()->filled('person_responsible') || in_array(request('type'), ['par', 'ics']))
                     <a href="{{ route('records.print-list', request()->query()) }}"
-                        class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium rounded-lg inline-flex items-center transition-colors focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium rounded-lg inline-flex items-center transition-all focus:ring-2 focus:ring-purple-500 focus:outline-none border border-purple-400 shadow-[0_0_15px_rgba(191,0,255,0.4)]"
                         data-no-app-loading>
                         <svg class="w-4 h-4 mr-1.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -209,22 +209,22 @@
                     <table class="records-table min-w-full border-collapse" id="records-data-table">
                         <thead class="records-table-thead sticky top-0 z-10">
                             <tr>
-                                <th class="records-table-th records-table-th-actions sticky left-0 z-30 bg-slate-700 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.2)]"
-                                    style="background-color: #3f4b5e;">Actions</th>
+                                <th class="records-table-th records-table-th-actions sticky left-0 z-30 bg-slate-900 border-r border-cyan-900/30 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.4)]"
+                                    style="background-color: rgba(15, 23, 42, 0.95);">Actions</th>
                                 @foreach ($headers as $h)
                                     <th class="records-table-th">{{ $h }}</th>
                                 @endforeach
                             </tr>
                         </thead>
-                        <tbody class="bg-white">
+                        <tbody class="bg-transparent">
                             @foreach ($records as $record)
-                                <tr class="group border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                <tr class="group border-b border-cyan-900/20 hover:bg-slate-800/50 transition-colors">
                                     <td
-                                        class="px-3 py-2 align-middle sticky left-0 z-20 bg-white group-hover:bg-gray-50 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.05)] transition-colors">
+                                        class="px-3 py-2 align-middle sticky left-0 z-20 bg-slate-900/90 group-hover:bg-slate-800 shadow-[4px_0_8px_-2px_rgba(0,0,0,0.3)] border-r border-cyan-900/20 transition-colors">
                                         <div class="flex items-center gap-1.5 min-w-max">
                                             <a href="{{ route('records.show', array_merge(['record' => $record], $listQuery)) }}"
                                                 title="View Details"
-                                                class="p-1.5 text-emerald-700 bg-emerald-100 hover:bg-emerald-200 rounded-full transition-colors">
+                                                class="p-1.5 text-emerald-400 bg-emerald-900/30 hover:bg-emerald-800/50 hover:text-emerald-300 rounded-full transition-colors border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
                                                 <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -236,7 +236,7 @@
 
                                             <a href="{{ route('records.edit', array_merge(['record' => $record], $listQuery)) }}"
                                                 title="Edit Record"
-                                                class="p-1.5 text-indigo-700 bg-indigo-100 hover:bg-indigo-200 rounded-full transition-colors">
+                                                class="p-1.5 text-cyan-400 bg-cyan-900/30 hover:bg-cyan-800/50 hover:text-cyan-300 rounded-full transition-colors border border-cyan-500/20 shadow-[0_0_10px_rgba(34,211,238,0.1)]">
                                                 <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -249,14 +249,14 @@
                                                 <button type="button"
                                                     onclick="previewImage('{{ route('records.image', [$record, 0]) }}')"
                                                     title="{{ $imgCount > 1 ? 'Images (' . $imgCount . ')' : 'Image' }}"
-                                                    class="p-1.5 text-sky-700 bg-sky-100 hover:bg-sky-200 rounded-full transition-colors relative">
+                                                    class="p-1.5 text-sky-400 bg-sky-900/30 hover:bg-sky-800/50 hover:text-sky-300 rounded-full transition-colors relative border border-sky-500/20 shadow-[0_0_10px_rgba(14,165,233,0.1)]">
                                                     <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                                     </svg>
                                                     @if($imgCount > 1) <span
-                                                        class="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-sky-200 text-[9px] font-bold text-sky-800 ring-1 ring-sky-50">{{$imgCount}}</span>
+                                                        class="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-cyan-500 text-[9px] font-bold text-slate-900 ring-1 ring-slate-800 shadow-[0_0_5px_rgba(6,182,212,0.6)]">{{$imgCount}}</span>
                                                     @endif
                                                 </button>
 
@@ -268,7 +268,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" title="Remove first image"
-                                                        class="p-1.5 text-red-700 bg-red-100 hover:bg-red-200 rounded-full transition-colors">
+                                                        class="p-1.5 text-red-500 bg-red-900/30 hover:bg-red-800/50 hover:text-red-400 rounded-full transition-colors border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.1)]">
                                                         <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
                                                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -281,7 +281,7 @@
                                                 <button type="button"
                                                     onclick="document.getElementById('attach-{{ $record->id }}').click()"
                                                     title="Attach Image"
-                                                    class="p-1.5 text-sky-700 bg-sky-100 hover:bg-sky-200 rounded-full transition-colors">
+                                                    class="p-1.5 text-sky-400 bg-sky-900/30 hover:bg-sky-800/50 hover:text-sky-300 rounded-full transition-colors border border-sky-500/20 shadow-[0_0_10px_rgba(14,165,233,0.1)]">
                                                     <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -306,7 +306,7 @@
                                                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                                                 @endforeach
                                                 <button type="submit" title="Delete Record"
-                                                    class="p-1.5 text-red-700 bg-red-100 hover:bg-red-200 rounded-full transition-colors ml-1">
+                                                    class="p-1.5 text-red-500 bg-red-900/30 hover:bg-red-800/50 hover:text-red-400 rounded-full transition-colors ml-1 border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.1)]">
                                                     <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg"
                                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -344,12 +344,12 @@
                                             <div class="flex items-center gap-2">
                                                 @if($isCategory)
                                                     @if($isPar)
-                                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-700 border border-indigo-200 uppercase tracking-tighter shadow-sm">PAR</span>
+                                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-cyan-900/40 text-cyan-400 border border-cyan-500/30 uppercase tracking-tighter shadow-[0_0_10px_rgba(34,211,238,0.2)]">PAR</span>
                                                     @else
-                                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 uppercase tracking-tighter shadow-sm">ICS</span>
+                                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-900/40 text-purple-400 border border-purple-500/30 uppercase tracking-tighter shadow-[0_0_10px_rgba(191,0,255,0.2)]">ICS</span>
                                                     @endif
                                                 @endif
-                                                <div class="truncate max-w-xs text-gray-700">
+                                                <div class="truncate max-w-xs text-slate-300">
                                                     {{ $display }}
                                                 </div>
                                             </div>
@@ -436,19 +436,26 @@
     <style>
         .records-pagination {
             padding: 1rem 1.25rem;
-            border-top: 1px solid #e2e8f0;
-            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Update vendor pagination text colors via nested targeting */
+        .records-pagination nav {
+            color: #cbd5e1;
+            font-size: 0.875rem;
         }
 
         .records-modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(4px);
+            background: rgba(5, 5, 17, 0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 50;
+            z-index: 10050;
         }
 
         .records-modal-overlay.records-modal-open {
@@ -465,38 +472,46 @@
             max-width: 100%;
             max-height: 80vh;
             border-radius: 0.75rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            border: 1px solid rgba(0, 240, 255, 0.4);
         }
 
         .records-modal-close {
             margin-top: 1rem;
             width: 100%;
             padding: 0.625rem 1rem;
-            background: #1e293b;
-            color: #fff;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #00f0ff;
             border-radius: 0.5rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            border: 0;
+            transition: all 0.2s;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
         }
 
         .records-modal-close:hover {
-            background: #334155;
+            background: rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            color: #fff;
         }
 
         .records-empty {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
             border-radius: 1rem;
-            border: 1px solid rgb(226 232 240);
+            border: 1px dashed rgba(0, 240, 255, 0.3);
             padding: 3rem 2rem;
             text-align: center;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
         }
 
         .records-empty-icon {
             width: 3.5rem;
             height: 3.5rem;
             margin: 0 auto 1rem;
-            color: rgb(148 163 184);
+            color: rgba(0, 240, 255, 0.5);
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.3));
         }
 
         .records-empty-icon svg {
@@ -505,31 +520,34 @@
         }
 
         .records-empty-text {
-            color: rgb(100 116 139);
+            color: #94a3b8;
             margin-bottom: 0.25rem;
         }
 
         .records-empty-links {
-            color: rgb(100 116 139);
+            color: #cbd5e1;
             margin: 0;
             font-size: 0.9375rem;
         }
 
         .records-empty-link {
-            color: rgb(99 102 241);
+            color: #00f0ff;
             font-weight: 500;
+            text-decoration: none;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
         }
 
         .records-empty-link:hover {
+            color: #67e8f9;
             text-decoration: underline;
         }
 
         .records-table-card {
-            background: #fff;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
             border-radius: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04),
-                0 0 24px rgba(99, 102, 241, 0.12), 0 0 48px rgba(99, 102, 241, 0.06);
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
             overflow: hidden;
         }
 
@@ -544,7 +562,7 @@
             right: 0;
             bottom: 0;
             width: 1.5rem;
-            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.06) 100%);
+            background: linear-gradient(to right, rgba(15, 23, 42, 0) 0%, rgba(5, 5, 17, 0.8) 100%);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
@@ -580,11 +598,11 @@
         }
 
         .records-table-card:hover .records-table-top-scroll::-webkit-scrollbar-thumb {
-            background-color: rgba(209, 213, 219, 0.5);
+            background-color: rgba(0, 240, 255, 0.3);
         }
 
         .records-table-card:hover .records-table-top-scroll::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(156, 163, 175, 1);
+            background-color: rgba(0, 240, 255, 0.6);
         }
 
         .records-table-top-scroll-inner {
@@ -615,22 +633,23 @@
             border-radius: 9999px;
         }
 
-        /* We use the card hover to trigger thumb visibility smoothly, mimicking a transition fade if supported */
         .records-table-card:hover .records-table-body-wrap::-webkit-scrollbar-thumb {
-            background-color: rgba(209, 213, 219, 0.5);
+            background-color: rgba(0, 240, 255, 0.3);
         }
 
         .records-table-body-wrap::-webkit-scrollbar-thumb:hover,
         .records-table-card:hover .records-table-body-wrap::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(156, 163, 175, 1);
+            background-color: rgba(0, 240, 255, 0.6);
         }
 
         .records-table {
             font-size: 0.8125rem;
+            color: #e2e8f0;
         }
 
         .records-table thead {
-            background: linear-gradient(180deg, #475569 0%, #334155 100%);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
         }
 
         .records-table-th {
@@ -638,13 +657,14 @@
             text-align: left;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.05em;
             white-space: nowrap;
             min-width: 5rem;
             max-width: 12rem;
-            border-bottom: none;
-            color: #f1f5f9;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            color: #00f0ff;
             font-size: 0.75rem;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
         }
 
         .records-table-th-actions {

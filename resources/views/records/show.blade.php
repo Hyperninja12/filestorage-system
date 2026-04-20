@@ -17,17 +17,17 @@
         </a>
 
         {{-- Search & Filter Global Section --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 overflow-hidden animate-staggered" style="animation-delay: 50ms;">
-            <div class="flex items-center gap-2 px-5 py-3.5 bg-gray-50/80 border-b border-gray-100 text-sm font-semibold text-gray-700">
-                <svg class="w-4 h-4 text-indigo-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
+        <div class="futuristic-card rounded-xl mb-8 overflow-hidden animate-staggered" style="animation-delay: 50ms;">
+            <div class="flex items-center gap-2 px-5 py-3.5 bg-slate-800/80 border-b border-cyan-900/30 text-sm font-semibold text-cyan-300">
+                <svg class="w-4 h-4 text-cyan-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
                 </svg>
                 <span>Search & filter global records</span>
             </div>
             <form action="{{ route('records.index') }}" method="GET" class="p-5 flex flex-col md:flex-row gap-4 items-end">
                 <div class="w-full md:flex-none md:w-32 relative">
-                    <label for="type" class="block text-xs font-semibold text-gray-500 mb-1.5 flex items-center font-sans tracking-tight">Type</label>
-                    <select name="type" id="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow bg-white font-sans text-gray-900 appearance-none pb-[9px]">
+                    <label for="type" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 flex items-center font-sans tracking-tight text-shadow-glow">Type</label>
+                    <select name="type" id="type" class="w-full px-3 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-shadow text-slate-100 appearance-none pb-[9px] shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                         <option value="all" {{ request('type') === 'all' || !request('type') ? 'selected' : '' }}>All</option>
                         <option value="par" {{ request('type') === 'par' ? 'selected' : '' }}>PAR</option>
                         <option value="ics" {{ request('type') === 'ics' ? 'selected' : '' }}>ICS</option>
@@ -35,32 +35,32 @@
                 </div>
 
                 <div class="w-full md:flex-1 relative">
-                    <label for="search" class="block text-xs font-semibold text-gray-500 mb-1.5 flex items-center font-sans tracking-tight">Search (any column)</label>
+                    <label for="search" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 flex items-center font-sans tracking-tight text-shadow-glow">Search (any column)</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                             </svg>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Type to search..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow font-sans">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Type to search..." class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-shadow font-sans shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
                 </div>
 
                 <div class="w-full md:flex-1 relative">
-                    <label for="person_responsible" class="block text-xs font-semibold text-gray-500 mb-1.5 flex items-center font-sans tracking-tight">By Person Responsible</label>
+                    <label for="person_responsible" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 flex items-center font-sans tracking-tight text-shadow-glow">By Person Responsible</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                             </svg>
                         </div>
-                        <input type="text" name="person_responsible" id="person_responsible" value="{{ request('person_responsible') }}" placeholder="Name or part of name" class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow font-sans">
+                        <input type="text" name="person_responsible" id="person_responsible" value="{{ request('person_responsible') }}" placeholder="Name or part of name" class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-shadow font-sans shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2 mt-2 md:mt-0 font-sans">
-                    <button type="submit" class="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-900 focus:outline-none tracking-tight">Search</button>
-                    <a href="{{ route('records.index') }}" class="px-5 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-300 focus:outline-none tracking-tight">Clear</a>
+                    <button type="submit" class="px-5 py-2 bg-cyan-900/40 hover:bg-cyan-800/60 text-cyan-300 border border-cyan-500/50 text-sm font-medium rounded-lg transition-all focus:ring-2 focus:ring-cyan-500 focus:outline-none shadow-[0_0_10px_rgba(0,240,255,0.1)] hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] tracking-tight">Search</button>
+                    <a href="{{ route('records.index') }}" class="px-5 py-2 bg-slate-800 border border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-slate-500 focus:outline-none tracking-tight">Clear</a>
                 </div>
             </form>
         </div>
@@ -183,10 +183,11 @@
     .record-detail { }
     .record-detail .app-back-btn { margin-bottom: 1.25rem; }
     .record-detail-card {
-        background: #fff;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
         border-radius: 1rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
-        border: 1px solid #e2e8f0;
+        box-shadow: 0 0 20px rgba(0,240,255,0.05), inset 0 1px 0 rgba(255,255,255,0.05);
+        border: 1px solid rgba(0, 240, 255, 0.2);
         overflow: hidden;
     }
     .record-detail-header {
@@ -196,10 +197,10 @@
         align-items: center;
         gap: 1rem;
         padding: 1.25rem 1.5rem;
-        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-        border-bottom: 1px solid #e2e8f0;
+        background: rgba(15, 23, 42, 0.8);
+        border-bottom: 1px solid rgba(0, 240, 255, 0.2);
     }
-    .record-detail-title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0; }
+    .record-detail-title { font-size: 1.25rem; font-weight: 700; color: #f8fafc; margin: 0; text-shadow: 0 0 10px rgba(0,240,255,0.3); }
     .record-detail-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .record-detail-btn {
         display: inline-flex;
@@ -216,28 +217,28 @@
         transition: all 0.2s ease;
     }
     .record-detail-btn svg { width: 16px; height: 16px; stroke-width: 2; flex-shrink: 0; }
-    .record-detail-btn-primary { background: #3b82f6; color: #fff; box-shadow: 0 1px 2px rgba(59, 130, 246, 0.2); }
-    .record-detail-btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
-    .record-detail-btn-secondary { background: #0ea5e9; color: #fff; box-shadow: 0 1px 2px rgba(14, 165, 233, 0.2); }
-    .record-detail-btn-secondary:hover { background: #0284c7; transform: translateY(-1px); }
-    .record-detail-btn-danger { background: #ef4444; color: #fff; box-shadow: 0 1px 2px rgba(239, 68, 68, 0.2); }
-    .record-detail-btn-danger:hover { background: #dc2626; transform: translateY(-1px); }
+    .record-detail-btn-primary { background: rgba(0, 240, 255, 0.15); color: #00f0ff; border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+    .record-detail-btn-primary:hover { background: rgba(0, 240, 255, 0.3); transform: translateY(-1px); box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); color: #fff; }
+    .record-detail-btn-secondary { background: rgba(191, 0, 255, 0.15); color: #e879f9; border-color: rgba(191, 0, 255, 0.4); box-shadow: 0 0 10px rgba(191, 0, 255, 0.2); }
+    .record-detail-btn-secondary:hover { background: rgba(191, 0, 255, 0.3); transform: translateY(-1px); box-shadow: 0 0 15px rgba(191, 0, 255, 0.4); color: #fff; }
+    .record-detail-btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+    .record-detail-btn-danger:hover { background: rgba(239, 68, 68, 0.3); transform: translateY(-1px); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); color: #fff; }
     .record-detail-body { overflow-x: auto; }
-    .record-detail-image-section { padding: 1.5rem; border-top: 1px solid #e2e8f0; background: #fafafa; }
-    .record-detail-image-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 0.75rem 0; }
+    .record-detail-image-section { padding: 1.5rem; border-top: 1px solid rgba(0, 240, 255, 0.2); background: rgba(5, 5, 17, 0.4); }
+    .record-detail-image-label { font-size: 0.75rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 0.75rem 0; }
     .record-detail-image-grid { display: flex; flex-wrap: wrap; gap: 1rem; }
     .record-detail-image-item { position: relative; display: inline-block; }
     .record-detail-image-remove-form { position: absolute; top: 0.5rem; right: 0.5rem; }
     .record-detail-image-remove-btn {
         display: inline-flex; align-items: center; justify-content: center;
         width: 1.75rem; height: 1.75rem;
-        padding: 0; border: none; border-radius: 0.375rem;
-        background: #fee2e2; color: #b91c1c;
+        padding: 0; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 0.375rem;
+        background: rgba(239, 68, 68, 0.2); color: #fca5a5;
         font-size: 1.25rem; line-height: 1; font-weight: 700; cursor: pointer;
         transition: background 0.15s, color 0.15s;
     }
-    .record-detail-image-remove-btn:hover { background: #fecaca; color: #991b1b; }
-    .record-detail-image { border-radius: 0.5rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); max-width: 20rem; max-height: 16rem; object-fit: contain; display: block; }
+    .record-detail-image-remove-btn:hover { background: rgba(239, 68, 68, 0.4); color: #fff; }
+    .record-detail-image { border-radius: 0.5rem; border: 1px solid rgba(0, 240, 255, 0.3); box-shadow: 0 0 15px rgba(0,240,255,0.1); max-width: 20rem; max-height: 16rem; object-fit: contain; display: block; }
     .detail-table { font-size: 0.875rem; }
     .detail-table-th {
         width: 12rem;
@@ -245,14 +246,15 @@
         padding: 0.75rem 1.25rem;
         text-align: left;
         font-weight: 600;
-        color: #475569;
-        background: #f8fafc;
-        border-right: 1px solid #e2e8f0;
+        color: #00f0ff;
+        background: rgba(15, 23, 42, 0.8);
+        border-right: 1px solid rgba(0, 240, 255, 0.15);
         vertical-align: top;
+        text-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
     }
     .detail-table-td {
         padding: 0.75rem 1.25rem;
-        color: #1e293b;
+        color: #e2e8f0;
         vertical-align: top;
         word-break: break-word;
         white-space: pre-wrap;
@@ -262,13 +264,13 @@
         font-variant-numeric: tabular-nums;
         white-space: normal;
     }
-    .detail-table-tr:nth-child(even) .detail-table-th { background: #f1f5f9; }
-    .detail-table-tr:nth-child(even) .detail-table-td { background: #f8fafc; }
-    .records-modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 50; }
+    .detail-table-tr:nth-child(even) .detail-table-th { background: rgba(5, 5, 17, 0.6); }
+    .detail-table-tr:nth-child(even) .detail-table-td { background: rgba(15, 23, 42, 0.4); }
+    .records-modal-overlay { position: fixed; inset: 0; background: rgba(5, 5, 17, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10050; }
     .records-modal-overlay.records-modal-open { display: flex; }
     .records-modal-box { max-width: 90vw; max-height: 90vh; padding: 1rem; }
-    .records-modal-img { max-width: 100%; max-height: 80vh; border-radius: 0.75rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4); }
-    .records-modal-close { margin-top: 1rem; width: 100%; padding: 0.625rem 1rem; background: #1e293b; color: #fff; border-radius: 0.5rem; font-weight: 500; cursor: pointer; border: 0; }
-    .records-modal-close:hover { background: #334155; }
+    .records-modal-img { max-width: 100%; max-height: 80vh; border-radius: 0.75rem; box-shadow: 0 0 30px rgba(0,240,255,0.2); border: 1px solid rgba(0,240,255,0.4); }
+    .records-modal-close { margin-top: 1rem; width: 100%; padding: 0.625rem 1rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 240, 255, 0.3); color: #00f0ff; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .records-modal-close:hover { background: rgba(0, 240, 255, 0.15); color: #fff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
 </style>
 @endpush

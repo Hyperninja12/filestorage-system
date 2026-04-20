@@ -437,77 +437,82 @@
     .import-hero-badge {
         display: inline-block;
         padding: 0.25rem 0.75rem;
-        background: rgba(99, 102, 241, 0.12);
-        color: #4f46e5;
+        background: rgba(0, 240, 255, 0.15);
+        color: #00f0ff;
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         border-radius: 9999px;
         margin-bottom: 0.75rem;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
     }
-    .import-hero-title { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; letter-spacing: -0.02em; }
-    .import-hero-desc { font-size: 0.9375rem; color: #64748b; margin: 0; max-width: 28rem; margin-left: auto; margin-right: auto; }
+    .import-hero-title { font-size: 1.75rem; font-weight: 700; color: #f8fafc; margin: 0 0 0.5rem 0; letter-spacing: -0.02em; text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
+    .import-hero-desc { font-size: 0.9375rem; color: #94a3b8; margin: 0; max-width: 28rem; margin-left: auto; margin-right: auto; }
     .import-card {
-        background: #fff;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
         border-radius: 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         padding: 2rem;
         max-width: 28rem;
         margin: 0 auto;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(0, 240, 255, 0.2);
     }
     .import-card-icon {
         width: 3.5rem;
         height: 3.5rem;
         margin-bottom: 1rem;
-        color: #6366f1;
-        background: rgba(99, 102, 241, 0.1);
+        color: #00f0ff;
+        background: rgba(0, 240, 255, 0.15);
         border-radius: 0.75rem;
         padding: 0.75rem;
         box-sizing: border-box;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
     }
     .import-card-icon svg { width: 100%; height: 100%; }
-    .import-title { font-size: 1.25rem; font-weight: 600; color: #1e293b; margin-bottom: 0.25rem; }
-    .import-desc { color: #64748b; font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem; }
+    .import-title { font-size: 1.25rem; font-weight: 600; color: #f8fafc; margin-bottom: 0.25rem; text-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+    .import-desc { color: #94a3b8; font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem; }
     .import-insert-alert {
         margin-bottom: 1.25rem;
         padding: 0.75rem 1rem;
         font-size: 0.8125rem;
         line-height: 1.45;
-        color: #1e40af;
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        border: 1px solid #93c5fd;
+        color: #7dd3fc;
+        background: rgba(14, 165, 233, 0.1);
+        border: 1px solid rgba(14, 165, 233, 0.3);
         border-radius: 0.5rem;
         text-align: left;
     }
     .import-insert-alert strong { font-weight: 600; }
     .import-form { display: flex; flex-direction: column; gap: 1.25rem; }
     .import-field { }
-    .import-label { display: block; font-size: 0.875rem; font-weight: 500; color: rgb(51 65 85); margin-bottom: 0.375rem; }
+    .import-label { display: block; font-size: 0.875rem; font-weight: 500; color: #94a3b8; margin-bottom: 0.375rem; }
     .import-file-input {
         display: block;
         width: 100%;
         font-size: 0.875rem;
-        color: rgb(71 85 105);
+        color: #e2e8f0;
         padding: 0.625rem 0.75rem;
-        border: 1px solid rgb(203 213 225);
+        border: 1px solid rgba(0, 240, 255, 0.3);
         border-radius: 0.5rem;
-        background: #fff;
+        background: rgba(15, 23, 42, 0.8);
+        transition: all 0.2s;
     }
-    .import-file-input:focus { outline: none; box-shadow: 0 0 0 2px rgb(99 102 241); border-color: rgb(99 102 241); }
+    .import-file-input:focus { outline: none; box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2), 0 0 10px rgba(0, 240, 255, 0.1); border-color: #00f0ff; }
     .import-file-input::file-selector-button {
         margin-right: 0.75rem;
         padding: 0.5rem 0.875rem;
-        border: 0;
+        border: 1px solid rgba(0, 240, 255, 0.2);
         border-radius: 0.5rem;
-        background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
-        color: #4f46e5;
+        background: rgba(0, 240, 255, 0.1);
+        color: #00f0ff;
         font-weight: 600;
         cursor: pointer;
+        transition: all 0.2s;
     }
-    .import-file-input::file-selector-button:hover { background: #e0e7ff; }
-    .import-error { margin-top: 0.25rem; font-size: 0.875rem; color: rgb(185 28 28); }
+    .import-file-input::file-selector-button:hover { background: rgba(0, 240, 255, 0.2); box-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
+    .import-error { margin-top: 0.25rem; font-size: 0.875rem; color: #fca5a5; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
     .import-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .import-btn {
         display: inline-flex;
@@ -521,12 +526,13 @@
         border: 1px solid transparent;
         cursor: pointer;
         min-width: 6rem;
+        transition: all 0.2s;
     }
     .import-btn:disabled { cursor: not-allowed; opacity: 0.8; }
-    .import-btn-primary { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3); }
-    .import-btn-primary:hover:not(:disabled) { opacity: 0.95; box-shadow: 0 4px 8px rgba(99, 102, 241, 0.35); }
-    .import-btn-secondary { background: #fff; color: #475569; border-color: #cbd5e1; }
-    .import-btn-secondary:hover { background: #f8fafc; }
+    .import-btn-primary { background: rgba(0, 240, 255, 0.15); color: #00f0ff; border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+    .import-btn-primary:hover:not(:disabled) { background: rgba(0, 240, 255, 0.3); color: #fff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+    .import-btn-secondary { background: rgba(15, 23, 42, 0.6); color: #94a3b8; border-color: rgba(148, 163, 184, 0.4); }
+    .import-btn-secondary:hover { background: rgba(148, 163, 184, 0.15); color: #f8fafc; }
     .import-btn-text { }
     .import-btn-loading { display: none; align-items: center; gap: 0.5rem; }
     .import-btn.loading .import-btn-text { display: none; }
@@ -534,17 +540,19 @@
     .import-spinner {
         width: 1rem;
         height: 1rem;
-        border: 2px solid rgba(255,255,255,0.3);
-        border-top-color: #fff;
+        border: 2px solid rgba(0,240,255,0.3);
+        border-top-color: #00f0ff;
         border-radius: 50%;
         animation: import-spin 0.7s linear infinite;
+        box-shadow: 0 0 10px rgba(0,240,255,0.5);
     }
     .import-spinner-lg { width: 2rem; height: 2rem; border-width: 3px; }
     @keyframes import-spin { to { transform: rotate(360deg); } }
     .import-loading-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(15, 23, 42, 0.6);
+        background: rgba(5, 5, 17, 0.85);
+        backdrop-filter: blur(8px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -554,12 +562,13 @@
     }
     .import-loading-overlay.import-loading-hidden { pointer-events: none; opacity: 0; }
     .import-progress-popup {
-        background: #fff;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
         border-radius: 1rem;
         padding: 1.25rem 1.25rem 1rem;
         text-align: center;
-        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-        border: 1px solid #e2e8f0;
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        border: 1px solid rgba(0, 240, 255, 0.3);
         width: min(92vw, 24rem);
         position: relative;
         z-index: 10051;
@@ -568,7 +577,8 @@
         margin: 0 0 0.35rem;
         font-size: 1rem;
         font-weight: 700;
-        color: #1e293b;
+        color: #f8fafc;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
     }
     .import-progress-percent {
         margin: 0 0 0.6rem;
@@ -576,36 +586,40 @@
         line-height: 1.1;
         font-weight: 800;
         letter-spacing: 0.01em;
-        color: #4f46e5;
+        color: #00f0ff;
         font-variant-numeric: tabular-nums;
+        text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
     }
-    .import-loading-hint { font-size: 0.8125rem; color: rgb(100 116 139); }
+    .import-loading-hint { font-size: 0.8125rem; color: #94a3b8; }
     .import-progress-wrap {
         margin-top: 0.25rem;
         width: 100%;
         height: 0.65rem;
         border-radius: 9999px;
-        background: #e2e8f0;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(0, 240, 255, 0.2);
         overflow: hidden;
     }
     .import-progress-bar {
         width: 0;
         height: 100%;
-        background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%);
+        background: linear-gradient(90deg, #00f0ff 0%, #bf00ff 100%);
         transition: width 0.25s ease;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
     .import-overlay-cancel {
         margin-top: 1rem;
         padding: 0.45rem 1rem;
         font-size: 0.8125rem;
         font-weight: 600;
-        color: #475569;
-        background: #f1f5f9;
-        border: 1px solid #cbd5e1;
+        color: #94a3b8;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.4);
         border-radius: 0.5rem;
         cursor: pointer;
+        transition: all 0.2s;
     }
-    .import-overlay-cancel:hover { background: #e2e8f0; }
+    .import-overlay-cancel:hover { background: rgba(148, 163, 184, 0.15); color: #f8fafc; }
     .import-insert-confirm {
         position: fixed; inset: 0; z-index: 10060;
         display: flex; align-items: center; justify-content: center; padding: 1rem;
@@ -613,13 +627,13 @@
     .import-insert-confirm-hidden { display: none !important; }
     .import-insert-confirm-backdrop {
         position: absolute; inset: 0;
-        background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(4px);
+        background: rgba(5, 5, 17, 0.85); backdrop-filter: blur(8px);
     }
     .import-insert-confirm-panel {
         position: relative; max-width: 22rem; width: 100%;
-        padding: 1.5rem; background: #fff; border-radius: 1rem;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        padding: 1.5rem; background: rgba(15, 23, 42, 0.85); border-radius: 1rem;
+        border: 1px solid rgba(0, 240, 255, 0.3); backdrop-filter: blur(12px);
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
         animation: importInsertPop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
     @keyframes importInsertPop {
@@ -628,24 +642,25 @@
     }
     .import-insert-confirm-icon {
         width: 2.75rem; height: 2.75rem; margin: 0 auto 1rem;
-        color: #4f46e5; background: #eef2ff; border-radius: 9999px;
+        color: #0a0a0a; background: #00f0ff; border-radius: 9999px;
         display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
     }
     .import-insert-confirm-icon svg { width: 1.5rem; height: 1.5rem; }
-    .import-insert-confirm-title { font-size: 1.125rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem; text-align: center; }
-    .import-insert-confirm-text { font-size: 0.875rem; color: #64748b; margin: 0 0 1.25rem; line-height: 1.5; text-align: center; }
+    .import-insert-confirm-title { font-size: 1.125rem; font-weight: 700; color: #f8fafc; margin: 0 0 0.5rem; text-align: center; text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
+    .import-insert-confirm-text { font-size: 0.875rem; color: #94a3b8; margin: 0 0 1.25rem; line-height: 1.5; text-align: center; }
     .import-insert-confirm-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
     .import-insert-confirm-btn {
         padding: 0.5rem 1.15rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;
-        cursor: pointer; border: 1px solid transparent;
+        cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
     }
-    .import-insert-confirm-btn-secondary { background: #fff; color: #475569; border-color: #cbd5e1; }
-    .import-insert-confirm-btn-secondary:hover { background: #f8fafc; }
+    .import-insert-confirm-btn-secondary { background: rgba(15, 23, 42, 0.6); color: #94a3b8; border-color: rgba(148, 163, 184, 0.4); }
+    .import-insert-confirm-btn-secondary:hover { background: rgba(148, 163, 184, 0.15); color: #f8fafc; }
     .import-insert-confirm-btn-primary {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #fff;
-        box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+        background: rgba(0, 240, 255, 0.15); color: #00f0ff; border-color: rgba(0, 240, 255, 0.4);
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
     }
-    .import-insert-confirm-btn-primary:hover { opacity: 0.95; }
+    .import-insert-confirm-btn-primary:hover { background: rgba(0, 240, 255, 0.3); color: #fff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
 
     .import-message-modal {
         position: fixed;
@@ -660,24 +675,25 @@
     .import-message-backdrop {
         position: absolute;
         inset: 0;
-        background: rgba(15, 23, 42, 0.55);
-        backdrop-filter: blur(4px);
+        background: rgba(5, 5, 17, 0.85);
+        backdrop-filter: blur(8px);
     }
     .import-message-panel {
         position: relative;
         width: 100%;
         max-width: 26rem;
         padding: 1.5rem;
-        background: #fff;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
         border-radius: 1rem;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
         text-align: center;
         animation: importInsertPop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .import-message-panel--info { border-top: 4px solid #6366f1; }
-    .import-message-panel--warning { border-top: 4px solid #d97706; }
-    .import-message-panel--error { border-top: 4px solid #dc2626; }
+    .import-message-panel--info { border-top: 4px solid #00f0ff; }
+    .import-message-panel--warning { border-top: 4px solid #bf00ff; }
+    .import-message-panel--error { border-top: 4px solid #ef4444; }
     .import-message-icon {
         width: 2.75rem;
         height: 2.75rem;
@@ -688,19 +704,20 @@
         justify-content: center;
     }
     .import-message-icon-svg { width: 1.5rem; height: 1.5rem; }
-    .import-message-icon--info { color: #4f46e5; background: #eef2ff; }
-    .import-message-icon--warning { color: #b45309; background: #fffbeb; }
-    .import-message-icon--error { color: #b91c1c; background: #fef2f2; }
+    .import-message-icon--info { color: #00f0ff; background: rgba(0, 240, 255, 0.15); box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+    .import-message-icon--warning { color: #e879f9; background: rgba(191, 0, 255, 0.15); box-shadow: 0 0 15px rgba(191, 0, 255, 0.3); }
+    .import-message-icon--error { color: #fca5a5; background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
     .import-message-title {
         font-size: 1.125rem;
         font-weight: 700;
-        color: #0f172a;
+        color: #f8fafc;
         margin: 0 0 0.75rem;
         line-height: 1.3;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
     }
     .import-message-text {
         font-size: 0.875rem;
-        color: #475569;
+        color: #94a3b8;
         margin: 0 0 1.25rem;
         line-height: 1.55;
         text-align: left;
@@ -714,21 +731,28 @@
         padding: 0.55rem 1rem;
         font-size: 0.875rem;
         font-weight: 600;
-        color: #fff;
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-        border: none;
+        color: #00f0ff;
+        background: rgba(0, 240, 255, 0.15);
+        border: 1px solid rgba(0, 240, 255, 0.4);
         border-radius: 0.5rem;
         cursor: pointer;
-        box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        transition: all 0.2s;
     }
-    .import-message-ok:hover { opacity: 0.95; }
+    .import-message-ok:hover { background: rgba(0, 240, 255, 0.3); color: #fff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
     .import-message-panel--error .import-message-ok {
-        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border-color: rgba(239, 68, 68, 0.4);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
     }
+    .import-message-panel--error .import-message-ok:hover { background: rgba(239, 68, 68, 0.3); color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
     .import-message-panel--warning .import-message-ok {
-        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-        box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
+        background: rgba(191, 0, 255, 0.15);
+        color: #e879f9;
+        border-color: rgba(191, 0, 255, 0.4);
+        box-shadow: 0 0 10px rgba(191, 0, 255, 0.2);
     }
+    .import-message-panel--warning .import-message-ok:hover { background: rgba(191, 0, 255, 0.3); color: #fff; box-shadow: 0 0 15px rgba(191, 0, 255, 0.4); }
 </style>
 @endpush

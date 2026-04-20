@@ -74,7 +74,7 @@
         {{-- Clean Navigation Link --}}
         <div class="mb-8">
             <a href="{{ route('records.show', array_merge(['record' => $record], $listQuery)) }}"
-                class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors group">
+                class="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-cyan-400 text-shadow-glow transition-all group">
                 <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="2" stroke="currentColor" class="group-hover:-translate-x-1 transition-transform">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
@@ -83,17 +83,17 @@
             </a>
             
         {{-- Search & Filter Global Section --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 mt-6 mb-8 overflow-hidden animate-staggered" style="animation-delay: 50ms;">
-            <div class="flex items-center gap-2 px-5 py-3.5 bg-gray-50/80 border-b border-gray-100 text-sm font-semibold text-gray-700">
-                <svg class="w-4 h-4 text-indigo-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
+        <div class="futuristic-card rounded-xl mt-6 mb-8 overflow-hidden animate-staggered" style="animation-delay: 50ms;">
+            <div class="flex items-center gap-2 px-5 py-3.5 bg-slate-800/80 border-b border-cyan-900/30 text-sm font-semibold text-cyan-300">
+                <svg class="w-4 h-4 text-cyan-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
                 </svg>
                 <span>Search & filter global records</span>
             </div>
             <form action="{{ route('records.index') }}" method="GET" class="p-5 flex flex-col md:flex-row gap-4 items-end">
                 <div class="w-full md:flex-none md:w-32 relative">
-                    <label for="type" class="block text-xs font-semibold text-gray-500 mb-1.5">Type</label>
-                    <select name="type" id="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow bg-white pb-[9px]">
+                    <label for="type" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 text-shadow-glow">Type</label>
+                    <select name="type" id="type" class="w-full px-3 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all appearance-none pb-[9px] shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                         <option value="all" {{ request('type') === 'all' || !request('type') ? 'selected' : '' }}>All</option>
                         <option value="par" {{ request('type') === 'par' ? 'selected' : '' }}>PAR</option>
                         <option value="ics" {{ request('type') === 'ics' ? 'selected' : '' }}>ICS</option>
@@ -101,54 +101,54 @@
                 </div>
 
                 <div class="w-full md:flex-1 relative">
-                    <label for="search" class="block text-xs font-semibold text-gray-500 mb-1.5">Search (any column)</label>
+                    <label for="search" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 text-shadow-glow">Search (any column)</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                             </svg>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Type to search..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Type to search..." class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
                 </div>
 
                 <div class="w-full md:flex-1 relative">
-                    <label for="person_responsible" class="block text-xs font-semibold text-gray-500 mb-1.5">By Person Responsible</label>
+                    <label for="person_responsible" class="block text-xs font-semibold text-cyan-200/70 mb-1.5 text-shadow-glow">By Person Responsible</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                             </svg>
                         </div>
-                        <input type="text" name="person_responsible" id="person_responsible" value="{{ request('person_responsible') }}" placeholder="Name or part of name" class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                        <input type="text" name="person_responsible" id="person_responsible" value="{{ request('person_responsible') }}" placeholder="Name or part of name" class="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2 mt-2 md:mt-0">
-                    <button type="submit" class="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-900 focus:outline-none">Search</button>
-                    <a href="{{ route('records.index') }}" class="px-5 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-300 focus:outline-none">Clear</a>
+                    <button type="submit" class="px-5 py-2 bg-cyan-900/40 hover:bg-cyan-800/60 text-cyan-300 border border-cyan-500/50 text-sm font-medium rounded-lg transition-all focus:ring-2 focus:ring-cyan-500 focus:outline-none shadow-[0_0_10px_rgba(0,240,255,0.1)] hover:shadow-[0_0_15px_rgba(0,240,255,0.3)]">Search</button>
+                    <a href="{{ route('records.index') }}" class="px-5 py-2 bg-slate-800 border border-slate-600 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-slate-500 focus:outline-none">Clear</a>
                 </div>
             </form>
         </div>
-            <h1 class="text-3xl font-bold text-gray-900 mt-4 tracking-tight">Edit Record</h1>
-            <p class="text-gray-500 mt-2 font-medium">Update the details for record #{{ $record->getDisplayNumber() }}</p>
+            <h1 class="text-3xl font-bold text-white mt-4 tracking-tight text-shadow-glow">Edit Record</h1>
+            <p class="text-cyan-200/70 mt-2 font-medium">Update the details for record #{{ $record->getDisplayNumber() }}</p>
         </div>
 
         {{-- Attached Images Card --}}
         @if (count($record->getImagePaths()) > 0)
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-8 animate-staggered overflow-hidden" style="animation-delay: 0ms;">
-                <div class="border-l-4 border-sky-400 p-8">
+            <div class="futuristic-card rounded-2xl mb-8 animate-staggered overflow-hidden" style="animation-delay: 0ms;">
+                <div class="border-l-4 border-sky-400/70 p-8">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="p-2 bg-sky-50 rounded-lg">
-                        <svg class="w-5 h-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+                    <div class="p-2 bg-sky-900/30 rounded-lg shadow-[0_0_10px_rgba(56,189,248,0.2)]">
+                        <svg class="w-5 h-5 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
                     </div>
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Attached Images ({{ count($record->getImagePaths()) }}/2)</h3>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest text-shadow-glow">Attached Images ({{ count($record->getImagePaths()) }}/2)</h3>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     @foreach ($record->getImagePaths() as $idx => $path)
-                        <div class="group relative bg-gray-50 rounded-2xl border border-gray-200 p-2 transition-all hover:shadow-md">
+                        <div class="group relative bg-slate-900/50 rounded-2xl border border-cyan-900/30 p-2 transition-all hover:shadow-[0_0_15px_rgba(0,240,255,0.1)]">
                             <img src="{{ route('records.image', [$record, $idx]) }}" alt="Image {{ $idx + 1 }}"
-                                class="w-full h-48 object-contain rounded-xl">
+                                class="w-full h-48 object-contain rounded-xl opacity-90 group-hover:opacity-100 transition-opacity">
                             <form action="{{ route('records.remove-image', [$record, $idx]) }}" method="POST"
                                 class="absolute top-4 right-4" data-app-confirm="1"
                                 data-app-confirm-title="Remove this image?"
@@ -157,7 +157,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    class="p-2 bg-white/90 backdrop-blur-sm text-red-600 rounded-lg shadow-sm hover:bg-red-50 transition-colors border border-red-100"
+                                    class="p-2 bg-red-900/40 backdrop-blur-sm text-red-400 rounded-lg shadow-sm hover:bg-red-800/60 transition-colors border border-red-500/30"
                                     title="Remove image">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
@@ -179,162 +179,162 @@
             @endforeach
 
             {{-- Section 1: Item Details Card --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-8 animate-staggered overflow-hidden" style="animation-delay: 100ms;">
-                <div class="border-l-4 border-indigo-400 p-8">
+            <div class="futuristic-card rounded-2xl mb-8 animate-staggered overflow-hidden" style="animation-delay: 100ms;">
+                <div class="border-l-4 border-cyan-400 p-8">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="p-2 bg-indigo-50 rounded-lg">
-                        <svg class="w-5 h-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" /></svg>
+                    <div class="p-2 bg-cyan-900/30 rounded-lg shadow-[0_0_10px_rgba(0,240,255,0.2)]">
+                        <svg class="w-5 h-5 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" /></svg>
                     </div>
                     <div>
-                        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Item Details & Referencing</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Classification, codes, and item descriptions</p>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest text-shadow-glow">Item Details & Referencing</h3>
+                        <p class="text-[11px] text-cyan-500/60 mt-0.5">Classification, codes, and item descriptions</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-6 gap-6">
                     @php $f = $getFieldData('Account Code'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" pattern="{{ $f->pattern }}" title="{{ $f->title }}" maxlength="{{ $f->maxlength }}" inputmode="{{ $f->inputmode }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
-                        @error($f->label) <p class="text-red-500 text-xs mt-2">{{ $message }}</p> @enderror
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" pattern="{{ $f->pattern }}" title="{{ $f->title }}" maxlength="{{ $f->maxlength }}" inputmode="{{ $f->inputmode }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
+                        @error($f->label) <p class="text-red-400 text-xs mt-2">{{ $message }}</p> @enderror
                     </div>
 
                     @php $f = $getFieldData('Fund'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Category'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none font-bold text-indigo-700">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border font-bold shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Subcategory'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Property No.'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none font-mono">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border font-mono shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Inventory Item No.'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none font-mono">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border font-mono shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Description'); @endphp
                     <div class="col-span-6">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <textarea name="{{ $f->name }}" id="{{ $f->id }}" rows="3" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none resize-none leading-relaxed">{{ $f->value }}</textarea>
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <textarea name="{{ $f->name }}" id="{{ $f->id }}" rows="3" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border resize-none leading-relaxed shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">{{ $f->value }}</textarea>
                     </div>
 
                     @php $f = $getFieldData('PO No.'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" pattern="{{ $f->pattern }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" pattern="{{ $f->pattern }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Date of Purchase'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] dark-date-input">
                     </div>
                 </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-8 animate-staggered overflow-hidden" style="animation-delay: 200ms;">
+            <div class="futuristic-card rounded-2xl mb-8 animate-staggered overflow-hidden" style="animation-delay: 200ms;">
                 <div class="border-l-4 border-emerald-400 p-8">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="p-2 bg-emerald-50 rounded-lg">
-                        <svg class="w-5 h-5 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
+                    <div class="p-2 bg-emerald-900/30 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                        <svg class="w-5 h-5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
                     </div>
                     <div>
-                        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Inventory & Financials</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Quantities, unit pricing, and valuations</p>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest text-shadow-glow">Inventory & Financials</h3>
+                        <p class="text-[11px] text-cyan-500/60 mt-0.5">Quantities, unit pricing, and valuations</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-6 gap-6">
                     @php $f = $getFieldData('Qty'); @endphp
                     <div class="col-span-2">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none font-bold">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border font-bold shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Unit'); @endphp
                     <div class="col-span-2">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none text-gray-500">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-cyan-200/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Unit Value'); @endphp
                     <div class="col-span-2">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }} (₱)</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" inputmode="{{ $f->inputmode }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none font-bold text-emerald-600 tabular-nums">
-                        @error($f->label) <p class="text-red-500 text-xs mt-2">{{ $message }}</p> @enderror
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }} (₱)</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" inputmode="{{ $f->inputmode }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-emerald-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border font-bold tabular-nums shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
+                        @error($f->label) <p class="text-red-400 text-xs mt-2">{{ $message }}</p> @enderror
                     </div>
 
                     @php $f = $getFieldData('On Hand Count'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('On Hand Value'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }} (₱)</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" inputmode="{{ $f->inputmode }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none font-medium text-gray-700 tabular-nums">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }} (₱)</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" inputmode="{{ $f->inputmode }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border font-medium tabular-nums shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
                 </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-12 animate-staggered overflow-hidden" style="animation-delay: 300ms;">
-                <div class="border-l-4 border-amber-400 p-8">
+            <div class="futuristic-card rounded-2xl mb-12 animate-staggered overflow-hidden" style="animation-delay: 300ms;">
+                <div class="border-l-4 border-purple-500/70 p-8">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="p-2 bg-amber-50 rounded-lg">
-                        <svg class="w-5 h-5 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
+                    <div class="p-2 bg-purple-900/30 rounded-lg shadow-[0_0_10px_rgba(191,0,255,0.2)]">
+                        <svg class="w-5 h-5 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
                     </div>
                     <div>
-                        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Accountability & Support</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Responsible personnel, location, and notes</p>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest text-shadow-glow">Accountability & Support</h3>
+                        <p class="text-[11px] text-cyan-500/60 mt-0.5">Responsible personnel, location, and notes</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-6 gap-6">
                     @php $f = $getFieldData('Person Responsible'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none font-semibold text-indigo-900">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border font-semibold shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Office'); @endphp
                     <div class="col-span-3">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Area Location'); @endphp
                     <div class="col-span-6">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none">
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <input type="{{ $f->type }}" name="{{ $f->name }}" id="{{ $f->id }}" value="{{ $f->value }}" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
                     </div>
 
                     @php $f = $getFieldData('Additional Information'); @endphp
                     <div class="col-span-6">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <textarea name="{{ $f->name }}" id="{{ $f->id }}" rows="2" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none resize-none">{{ $f->value }}</textarea>
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <textarea name="{{ $f->name }}" id="{{ $f->id }}" rows="2" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border resize-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">{{ $f->value }}</textarea>
                     </div>
 
                     @php $f = $getFieldData('Remarks'); @endphp
                     <div class="col-span-6">
-                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-gray-600 mb-2">{{ $f->label }}</label>
-                        <textarea name="{{ $f->name }}" id="{{ $f->id }}" rows="2" placeholder="{{ $f->placeholder }}" class="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 focus:bg-white focus:ring-2 focus:ring-purple-500/20 transition-all border outline-none resize-none">{{ $f->value }}</textarea>
+                        <label for="{{ $f->id }}" class="block text-sm font-semibold text-cyan-100/70 mb-2">{{ $f->label }}</label>
+                        <textarea name="{{ $f->name }}" id="{{ $f->id }}" rows="2" placeholder="{{ $f->placeholder }}" class="w-full bg-slate-900/80 border-cyan-900/50 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-400 transition-all border resize-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">{{ $f->value }}</textarea>
                     </div>
                 </div>
                 </div>
@@ -342,11 +342,11 @@
 
             <div class="flex items-center gap-6 animate-staggered" style="animation-delay: 400ms;">
                 <button type="submit"
-                    class="flex-1 py-4 px-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:scale-95 leading-tight tracking-wide">
+                    class="flex-1 py-4 px-6 bg-cyan-600 hover:bg-cyan-500 text-slate-100 font-bold rounded-2xl shadow-[0_0_15px_rgba(6,182,212,0.4)] border border-cyan-400/50 hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] transition-all transform hover:-translate-y-0.5 active:scale-95 leading-tight tracking-wide">
                     Update Record Details
                 </button>
                 <a href="{{ route('records.show', array_merge(['record' => $record], $listQuery)) }}"
-                    class="px-8 py-4 text-gray-500 font-semibold hover:text-gray-900 transition-colors">
+                    class="px-8 py-4 text-slate-400 font-semibold hover:text-cyan-400 transition-colors">
                     Cancel
                 </a>
             </div>
