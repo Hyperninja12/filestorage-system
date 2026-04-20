@@ -73,14 +73,23 @@ class UnlockController extends Controller
             return back()->withErrors(['password' => 'Wrong password. Please try again.']);
         }
 
-        $activeSessionId = Cache::get('active_system_session_id');
+        $activeSessions = Cache::get('active_system_sessions', []);
+        $now = now()->timestamp;
+        $activeSessions = array_filter($activeSessions, fn($expiry) => $expiry > $now);
+
         $currentSessionId = session()->getId();
 
-        if ($activeSessionId && $activeSessionId !== $currentSessionId && ! $request->has('force')) {
+        if (!isset($activeSessions[$currentSessionId]) && count($activeSessions) >= 2 && ! $request->has('force')) {
             return back()->with('requires_override_confirmation', true)->withInput();
         }
 
-        Cache::put('active_system_session_id', $currentSessionId, now()->addMinutes(config('session.lifetime', 120)));
+        if (!isset($activeSessions[$currentSessionId]) && count($activeSessions) >= 2) {
+            asort($activeSessions);
+            array_shift($activeSessions); 
+        }
+
+        $activeSessions[$currentSessionId] = now()->addMinutes(config('session.lifetime', 120))->timestamp;
+        Cache::put('active_system_sessions', $activeSessions, now()->addMinutes(config('session.lifetime', 120)));
         session(['system_unlocked' => true]);
 
         // So the Records page can play a short "unlock" transition animation.
@@ -118,8 +127,12 @@ class UnlockController extends Controller
      */
     public function lock(Request $request)
     {
-        if (Cache::get('active_system_session_id') === session()->getId()) {
-            Cache::forget('active_system_session_id');
+        $activeSessions = Cache::get('active_system_sessions', []);
+        $currentSessionId = session()->getId();
+        
+        if (isset($activeSessions[$currentSessionId])) {
+            unset($activeSessions[$currentSessionId]);
+            Cache::put('active_system_sessions', $activeSessions, now()->addMinutes(config('session.lifetime', 120)));
         }
 
         $request->session()->forget('system_unlocked');

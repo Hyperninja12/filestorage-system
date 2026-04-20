@@ -81,6 +81,55 @@
                 </svg>
                 Back to record details
             </a>
+            
+        {{-- Search & Filter Global Section --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 mt-6 mb-8 overflow-hidden animate-staggered" style="animation-delay: 50ms;">
+            <div class="flex items-center gap-2 px-5 py-3.5 bg-gray-50/80 border-b border-gray-100 text-sm font-semibold text-gray-700">
+                <svg class="w-4 h-4 text-indigo-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                </svg>
+                <span>Search & filter global records</span>
+            </div>
+            <form action="{{ route('records.index') }}" method="GET" class="p-5 flex flex-col md:flex-row gap-4 items-end">
+                <div class="w-full md:flex-none md:w-32 relative">
+                    <label for="type" class="block text-xs font-semibold text-gray-500 mb-1.5">Type</label>
+                    <select name="type" id="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow bg-white pb-[9px]">
+                        <option value="all" {{ request('type') === 'all' || !request('type') ? 'selected' : '' }}>All</option>
+                        <option value="par" {{ request('type') === 'par' ? 'selected' : '' }}>PAR</option>
+                        <option value="ics" {{ request('type') === 'ics' ? 'selected' : '' }}>ICS</option>
+                    </select>
+                </div>
+
+                <div class="w-full md:flex-1 relative">
+                    <label for="search" class="block text-xs font-semibold text-gray-500 mb-1.5">Search (any column)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                        </div>
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Type to search..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                </div>
+
+                <div class="w-full md:flex-1 relative">
+                    <label for="person_responsible" class="block text-xs font-semibold text-gray-500 mb-1.5">By Person Responsible</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                        </div>
+                        <input type="text" name="person_responsible" id="person_responsible" value="{{ request('person_responsible') }}" placeholder="Name or part of name" class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 mt-2 md:mt-0">
+                    <button type="submit" class="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-900 focus:outline-none">Search</button>
+                    <a href="{{ route('records.index') }}" class="px-5 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition-colors focus:ring-2 focus:ring-gray-300 focus:outline-none">Clear</a>
+                </div>
+            </form>
+        </div>
             <h1 class="text-3xl font-bold text-gray-900 mt-4 tracking-tight">Edit Record</h1>
             <p class="text-gray-500 mt-2 font-medium">Update the details for record #{{ $record->getDisplayNumber() }}</p>
         </div>
@@ -302,6 +351,8 @@
                 </a>
             </div>
         </form>
+
+
     </div>
 
     <script>

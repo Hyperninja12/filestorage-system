@@ -482,7 +482,7 @@ class RecordController extends Controller
             return null;
         }
 
-        return round($num, 2);
+        return $num;
     }
 
     /**

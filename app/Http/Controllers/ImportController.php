@@ -224,7 +224,7 @@ class ImportController extends Controller
             }
 
             if ($col === 'Unit Value' || $col === 'On Hand Value') {
-                $row[$col] = $this->parseFlexibleMoneyToInt($s) ?? $s;
+                $row[$col] = $this->parseFlexibleMoneyToFloat($s) ?? $s;
                 continue;
             }
 
@@ -258,7 +258,7 @@ class ImportController extends Controller
         return $ts !== false ? date('Y-m-d', $ts) : $s;
     }
 
-    private function parseFlexibleMoneyToInt(string $raw): ?int
+    private function parseFlexibleMoneyToFloat(string $raw): ?float
     {
         $s = trim($raw);
         if ($s === '') {
@@ -276,7 +276,7 @@ class ImportController extends Controller
             return null;
         }
 
-        return (int) round($num);
+        return $num;
     }
 
     /**

@@ -18,17 +18,19 @@ class SystemLockMiddleware
             return redirect('/unlock');
         }
 
-        $activeSessionId = Cache::get('active_system_session_id');
+        $activeSessions = Cache::get('active_system_sessions', []);
+        $now = now()->timestamp;
+        $activeSessions = array_filter($activeSessions, fn($expiry) => $expiry > $now);
+
         $currentSessionId = session()->getId();
 
-        if ($activeSessionId && $activeSessionId !== $currentSessionId) {
+        if (!isset($activeSessions[$currentSessionId])) {
             session()->forget('system_unlocked');
-            return redirect('/unlock')->withErrors(['password' => 'Your session was closed because another device logged in.']);
+            return redirect('/unlock')->withErrors(['password' => 'Your session was closed because the device limit (2) was reached by newer logins.']);
         }
 
-        if ($activeSessionId === $currentSessionId) {
-            Cache::put('active_system_session_id', $currentSessionId, now()->addMinutes(config('session.lifetime', 120)));
-        }
+        $activeSessions[$currentSessionId] = now()->addMinutes(config('session.lifetime', 120))->timestamp;
+        Cache::put('active_system_sessions', $activeSessions, now()->addMinutes(config('session.lifetime', 120)));
 
         return $next($request);
     }

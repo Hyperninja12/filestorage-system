@@ -31,30 +31,54 @@
     <nav class="app-nav">
         <div class="app-nav-inner">
             <a href="{{ route('records.index') }}" class="app-nav-brand">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo" class="app-nav-logo">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="app-nav-logo">
                 <span>Data Import</span>
             </a>
+
             <div class="app-nav-links">
-                <a href="{{ route('records.index') }}" class="app-nav-icon-link {{ request()->routeIs('records.index') ? 'app-nav-icon-link-active' : '' }}" title="Records">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                <a href="{{ route('records.index') }}"
+                    class="app-nav-icon-link {{ request()->routeIs('records.index') ? 'app-nav-icon-link-active' : '' }}"
+                    title="Records">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" width="24" height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                     </svg>
                 </a>
-                <a href="{{ route('import.create') }}" class="app-nav-icon-link {{ request()->routeIs('import.create') ? 'app-nav-icon-link-active' : '' }}" title="Import CSV/Excel">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                <a href="{{ route('import.create') }}"
+                    class="app-nav-icon-link {{ request()->routeIs('import.create') ? 'app-nav-icon-link-active' : '' }}"
+                    title="Import CSV/Excel">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" width="24" height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
                     </svg>
                 </a>
-                <a href="{{ route('module-two.index') }}" class="app-nav-icon-link {{ request()->routeIs('module-two.index') ? 'app-nav-icon-link-active' : '' }}" title="New System">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z" />
+                <a href="{{ route('analytics.index') }}"
+                    class="app-nav-icon-link {{ request()->routeIs('analytics.index') ? 'app-nav-icon-link-active' : '' }}"
+                    title="Analytics & Statistics">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" width="24" height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                </a>
+                <a href="{{ route('module-two.index') }}"
+                    class="app-nav-icon-link {{ request()->routeIs('module-two.index') ? 'app-nav-icon-link-active' : '' }}"
+                    title="New System">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" width="24" height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z" />
                     </svg>
                 </a>
                 <form action="{{ route('lock') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="app-nav-icon-link" title="Lock System">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" width="24" height="24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                         </svg>
                     </button>
                 </form>
@@ -89,19 +113,24 @@
 
     <style>
         .app-body {
-            background: #E8F6F3;
-            min-height: 100vh;
+            background-color: #f0efff !important;
+            background-image:
+                radial-gradient(ellipse at 60% 0%, rgba(167, 139, 250, 0.22) 0%, transparent 55%),
+                radial-gradient(ellipse at 0% 80%, rgba(99, 102, 241, 0.10) 0%, transparent 50%),
+                linear-gradient(160deg, #f0efff 0%, #f5f3ff 40%, #faf9ff 100%) !important;
+            background-attachment: fixed !important;
+            min-height: 100vh !important;
         }
 
         .app-nav {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            background: rgba(240, 237, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(167, 139, 250, 0.25);
+            box-shadow: 0 1px 12px rgba(124, 58, 237, 0.07);
         }
 
         .app-nav-inner {
@@ -124,11 +153,11 @@
         }
 
         .app-nav-logo {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            border-radius: 6px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+            border-radius: 9999px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
         }
 
         .app-nav-links {
@@ -144,27 +173,29 @@
             width: 2.75rem;
             height: 2.75rem;
             border-radius: 9999px;
-            color: #334155;
+            color: #6d28d9;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            background: rgba(241, 245, 249, 0.5);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            background: rgba(245, 243, 255, 0.65);
+            border: 1px solid rgba(167, 139, 250, 0.3);
             cursor: pointer;
             text-decoration: none;
+            backdrop-filter: blur(8px);
         }
 
         .app-nav-icon-link:hover {
-            background: #f1f5f9;
-            color: #0ea5e9;
+            background: rgba(237, 233, 255, 0.9);
+            color: #5b21b6;
             transform: translateY(-1.5px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border-color: #cbd5e1;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.18);
+            border-color: rgba(139, 92, 246, 0.5);
         }
 
         .app-nav-icon-link-active {
-            background: #e0f2fe;
-            color: #0369a1;
-            border-color: #bae6fd;
+            background: rgba(221, 214, 254, 0.75);
+            color: #5b21b6;
+            border-color: rgba(139, 92, 246, 0.55);
+            box-shadow: 0 0 14px rgba(124, 58, 237, 0.18);
         }
 
         .app-nav-icon-link svg {
@@ -266,6 +297,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);

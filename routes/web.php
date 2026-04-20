@@ -3,6 +3,7 @@
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\UnlockController;
+use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Route;
 
 // Unlock system — wala’y middleware, aron makita ang lock screen
@@ -24,6 +25,8 @@ Route::middleware(['system.lock'])->group(function (): void {
 
     Route::get('/import', [ImportController::class, 'create'])->name('import.create');
     Route::post('/import', [ImportController::class, 'store'])->name('import.store');
+
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
     Route::get('/module-two', function () {
         return view('module-two.index');
