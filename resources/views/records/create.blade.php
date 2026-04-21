@@ -191,7 +191,10 @@
 @push('styles')
     <style>
     <style>
-        .record-edit {}
+        .record-edit {
+            max-width: 56rem;
+            margin: 0 auto;
+        }
 
         .record-edit .app-back-btn {
             margin-bottom: 1.25rem;
@@ -205,6 +208,7 @@
             border: 1px solid rgba(0, 240, 255, 0.2);
             overflow: hidden;
             max-width: 56rem;
+            margin: 0 auto;
         }
 
         .record-edit-header {

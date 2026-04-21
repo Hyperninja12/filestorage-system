@@ -16,18 +16,21 @@
             font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
             min-height: 100vh; margin: 0;
             display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(160deg, #E8F6F3 0%, #d4ede8 40%, #b8e4dc 100%);
-            position: relative;
-            overflow: hidden;
+            background: #050511;
+            color: #f8fafc;
+            padding: 2rem 1rem;
+            box-sizing: border-box;
         }
         body::before {
             content: '';
-            position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(14, 165, 233, 0.12), transparent),
-                        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(6, 182, 212, 0.08), transparent),
-                        radial-gradient(ellipse 50% 30% at 0% 80%, rgba(14, 165, 233, 0.06), transparent);
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 240, 255, 0.15), transparent),
+                        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(191, 0, 255, 0.1), transparent),
+                        radial-gradient(ellipse 50% 30% at 0% 80%, rgba(0, 240, 255, 0.08), transparent);
             pointer-events: none;
+            z-index: -1;
         }
+        .text-shadow-glow { text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
         .unlock-wrap {
             position: relative;
             z-index: 1;
@@ -46,6 +49,7 @@
             border-radius: 1.25rem;
             padding: 3px;
             overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
         }
         .unlock-card-ring::before {
             content: '';
@@ -54,7 +58,7 @@
             height: 200%;
             left: -50%;
             top: -50%;
-            background: conic-gradient(from 0deg, transparent 0deg 200deg, rgba(14, 165, 233, 0.5) 230deg, #0ea5e9 260deg, #06b6d4 290deg, transparent 320deg);
+            background: conic-gradient(from 0deg, transparent 0deg 200deg, rgba(0, 240, 255, 0.5) 230deg, #00f0ff 260deg, #bf00ff 290deg, transparent 320deg);
             animation: unlock-ring-spin 2.5s linear infinite;
         }
         .unlock-card-ring::after {
@@ -64,18 +68,18 @@
             height: 200%;
             left: -50%;
             top: -50%;
-            background: conic-gradient(from 180deg, transparent 0deg 160deg, rgba(6, 182, 212, 0.6) 190deg, #06b6d4 220deg, #0ea5e9 250deg, transparent 280deg);
+            background: conic-gradient(from 180deg, transparent 0deg 160deg, rgba(191, 0, 255, 0.6) 190deg, #bf00ff 220deg, #00f0ff 250deg, transparent 280deg);
             animation: unlock-ring-spin-reverse 3s linear infinite;
         }
         .unlock-card {
             position: relative;
             z-index: 1;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
             border-radius: calc(1.25rem - 3px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.05);
             padding: 2.25rem 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 240, 255, 0.2);
         }
         @keyframes unlock-ring-spin {
             to { transform: rotate(360deg); }
@@ -87,29 +91,30 @@
             width: 3.5rem; height: 3.5rem;
             margin: 0 auto 1.25rem;
             display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            background: rgba(0, 240, 255, 0.15);
             border-radius: 1rem;
-            box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.35);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.4);
         }
-        .unlock-icon-wrap svg { width: 1.75rem; height: 1.75rem; color: #fff; }
-        .unlock-title { font-size: 1.375rem; font-weight: 700; color: #0f172a; margin: 0 0 0.25rem; text-align: center; letter-spacing: -0.02em; }
-        .unlock-subtitle { font-size: 0.875rem; color: #64748b; margin: 0 0 1.75rem; text-align: center; }
+        .unlock-icon-wrap svg { width: 1.75rem; height: 1.75rem; color: #00f0ff; }
+        .unlock-title { font-size: 1.375rem; font-weight: 700; color: #00f0ff; margin: 0 0 0.25rem; text-align: center; letter-spacing: -0.02em; text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
+        .unlock-subtitle { font-size: 0.875rem; color: #94a3b8; margin: 0 0 1.75rem; text-align: center; }
         .unlock-input-wrap { position: relative; margin-bottom: 0.25rem; }
         .unlock-input {
             width: 100%; padding: 0.75rem 3rem 0.75rem 1rem;
             font-size: 1rem; border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-            background: #f8fafc;
-            color: #0f172a;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            background: rgba(5, 5, 17, 0.6);
+            color: #f8fafc;
             box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            transition: all 0.2s;
         }
-        .unlock-input::placeholder { color: #94a3b8; }
-        .unlock-input:hover { background: #fff; border-color: #cbd5e1; }
+        .unlock-input::placeholder { color: #475569; }
+        .unlock-input:hover { background: rgba(15, 23, 42, 0.8); border-color: #00f0ff; }
         .unlock-input:focus {
-            outline: none; background: #fff;
-            border-color: #0ea5e9;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+            outline: none; background: rgba(15, 23, 42, 0.9);
+            border-color: #00f0ff;
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2), 0 0 10px rgba(0, 240, 255, 0.1);
         }
         .unlock-toggle-eye {
             position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
@@ -117,35 +122,38 @@
             color: #64748b; border-radius: 0.5rem;
             transition: color 0.2s, background 0.2s;
         }
-        .unlock-toggle-eye:hover { color: #0ea5e9; background: rgba(14, 165, 233, 0.08); }
+        .unlock-toggle-eye:hover { color: #00f0ff; background: rgba(0, 240, 255, 0.15); }
         .unlock-toggle-eye svg { width: 1.25rem; height: 1.25rem; display: block; }
         .unlock-btn {
             width: 100%; margin-top: 1.25rem; padding: 0.75rem 1rem;
             font-size: 1rem; font-weight: 600; color: #fff;
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            border: none; border-radius: 0.75rem; cursor: pointer;
-            box-shadow: 0 4px 14px -2px rgba(14, 165, 233, 0.4);
-            transition: transform 0.15s, box-shadow 0.15s;
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid rgba(0, 240, 255, 0.4); border-radius: 0.75rem; cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+            transition: all 0.2s;
+            text-transform: uppercase; letter-spacing: 0.05em;
         }
-        .unlock-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.45); }
+        .unlock-btn:hover { background: rgba(0, 240, 255, 0.3); box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); transform: translateY(-1px); }
         .unlock-btn:active { transform: translateY(0); }
         .unlock-btn:disabled { opacity: 0.85; cursor: not-allowed; transform: none; }
         .unlock-error {
             margin-top: 0.75rem; padding: 0.625rem 0.875rem;
-            font-size: 0.8125rem; color: #b91c1c;
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-            border: 1px solid #fecaca; border-radius: 0.5rem;
+            font-size: 0.8125rem; color: #fca5a5;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 0.5rem;
             display: flex; align-items: center; gap: 0.5rem;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+            text-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
         }
         .unlock-error::before {
             content: ''; width: 1rem; height: 1rem; flex-shrink: 0;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23b91c1c'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'/%3E%3C/svg%3E") center/contain no-repeat;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fca5a5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'/%3E%3C/svg%3E") center/contain no-repeat;
         }
         .unlock-loading {
             position: fixed; inset: 0; z-index: 9999;
-            background: rgba(232, 246, 243, 0.92);
+            background: rgba(5, 5, 17, 0.85);
             display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
             opacity: 1;
             pointer-events: auto;
             transition: opacity 0.25s ease-in-out;
@@ -154,13 +162,14 @@
         .unlock-loading-content { text-align: center; }
         .unlock-loading-spinner {
             width: 2.75rem; height: 2.75rem;
-            border: 3px solid rgba(14, 165, 233, 0.2);
-            border-top-color: #0ea5e9;
+            border: 3px solid rgba(0, 240, 255, 0.2);
+            border-top-color: #00f0ff;
             border-radius: 50%;
             animation: unlock-spin 0.7s linear infinite;
             margin: 0 auto 1rem;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
         }
-        .unlock-loading-text { font-size: 0.9375rem; font-weight: 600; color: #334155; }
+        .unlock-loading-text { font-size: 0.9375rem; font-weight: 600; color: #00f0ff; text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
         @keyframes unlock-spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -190,37 +199,37 @@
     <style>
         .unlock-override-modal {
             position: fixed; inset: 0; z-index: 10000;
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(5, 5, 17, 0.7);
             display: flex; align-items: center; justify-content: center;
             backdrop-filter: blur(8px);
         }
         .override-modal-content {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(15, 23, 42, 0.85);
             padding: 2rem; border-radius: 1.25rem;
             max-width: 24rem; width: 90%; text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
             animation: modal-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes modal-pop {
             from { opacity: 0; transform: scale(0.95) translateY(10px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .override-title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem; }
-        .override-text { font-size: 0.9375rem; color: #475569; margin: 0 0 1.5rem; line-height: 1.5; }
+        .override-title { font-size: 1.25rem; font-weight: 700; color: #f8fafc; margin: 0 0 0.5rem; text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
+        .override-text { font-size: 0.9375rem; color: #94a3b8; margin: 0 0 1.5rem; line-height: 1.5; }
         .override-actions { display: flex; gap: 0.75rem; justify-content: stretch; }
         .override-btn-cancel, .override-btn-confirm {
             flex: 1; padding: 0.75rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.9375rem;
             cursor: pointer; text-decoration: none; text-align: center; border: none;
-            transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+            transition: all 0.2s;
         }
-        .override-btn-cancel { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
-        .override-btn-cancel:hover { background: #e2e8f0; }
+        .override-btn-cancel { background: rgba(15, 23, 42, 0.6); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.4); }
+        .override-btn-cancel:hover { background: rgba(148, 163, 184, 0.15); color: #f8fafc; }
         .override-btn-confirm {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff;
-            box-shadow: 0 4px 14px -2px rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.15); color: #f8fafc; border: 1px solid rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
         }
-        .override-btn-confirm:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(239, 68, 68, 0.45); }
+        .override-btn-confirm:hover { background: rgba(239, 68, 68, 0.3); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); transform: translateY(-1px); }
     </style>
     @endif
     <div class="unlock-loading hidden" id="unlock-loading">

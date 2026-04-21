@@ -22,6 +22,7 @@
 </head>
 
 <body class="app-body text-slate-100 min-h-screen bg-slate-950">
+
     <div class="app-loading hidden" id="app-loading">
         <div class="app-loading-content">
             <div class="app-loading-spinner"></div>
@@ -31,7 +32,7 @@
     <nav class="app-nav">
         <div class="app-nav-inner">
             <a href="{{ route('records.index') }}" class="app-nav-brand">
-                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="app-nav-logo">
+                <img width="44" height="44" src="{{ asset('images/logo.jpg') }}" alt="Logo" class="app-nav-logo">
                 <span>Data Import</span>
             </a>
 
@@ -141,6 +142,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .app-nav-brand {
@@ -166,8 +169,10 @@
 
         .app-nav-links {
             display: flex;
+            flex-wrap: wrap;
             gap: 0.5rem;
             align-items: center;
+            justify-content: center;
         }
 
         .app-nav-icon-link {
@@ -305,6 +310,8 @@
             letter-spacing: 0.05em;
         }
 
+
+
         /* Premium staggered entry animations */
         @keyframes pageEnter {
             from {
@@ -437,6 +444,7 @@
             color: #fff;
         }
     </style>
+
     <script>
         (function () {
             var loading = document.getElementById('app-loading');
@@ -461,6 +469,14 @@
                 // Import / add-record use modals; global loader would cover confirm dialogs (low z-index vs 9999).
                 if (form.id === 'import-form' || form.id === 'record-create-form' || form.getAttribute('data-no-app-loading') !== null) return;
                 show();
+            });
+
+            // Fix for Safari / Chrome Back-Forward Cache (bfcache)
+            // If user clicks "Back", hide the loader because the DOM restores the exact state when they left.
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    window.hideAppGlobalLoading();
+                }
             });
         })();
     </script>

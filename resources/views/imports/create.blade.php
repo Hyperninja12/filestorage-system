@@ -429,10 +429,19 @@
 
 @push('styles')
 <style>
-    .import-page { position: relative; min-height: 50vh; }
+    .import-page { 
+        position: relative; 
+        min-height: calc(100vh - 10rem); 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
     .import-hero {
         text-align: center;
         margin-bottom: 2rem;
+        width: 100%;
+        max-width: 28rem;
     }
     .import-hero-badge {
         display: inline-block;
@@ -455,14 +464,18 @@
         border-radius: 1rem;
         box-shadow: 0 0 20px rgba(0, 240, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         padding: 2rem;
+        width: 100%;
         max-width: 28rem;
-        margin: 0 auto;
         border: 1px solid rgba(0, 240, 255, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
     .import-card-icon {
         width: 3.5rem;
         height: 3.5rem;
-        margin-bottom: 1rem;
+        margin: 0 auto 1rem;
         color: #00f0ff;
         background: rgba(0, 240, 255, 0.15);
         border-radius: 0.75rem;
@@ -482,12 +495,13 @@
         background: rgba(14, 165, 233, 0.1);
         border: 1px solid rgba(14, 165, 233, 0.3);
         border-radius: 0.5rem;
-        text-align: left;
+        text-align: center;
+        width: 100%;
     }
     .import-insert-alert strong { font-weight: 600; }
-    .import-form { display: flex; flex-direction: column; gap: 1.25rem; }
-    .import-field { }
-    .import-label { display: block; font-size: 0.875rem; font-weight: 500; color: #94a3b8; margin-bottom: 0.375rem; }
+    .import-form { display: flex; flex-direction: column; gap: 1.25rem; width: 100%; align-items: center; }
+    .import-field { width: 100%; }
+    .import-label { display: block; font-size: 0.875rem; font-weight: 500; color: #94a3b8; margin-bottom: 0.375rem; text-align: center; }
     .import-file-input {
         display: block;
         width: 100%;
@@ -513,7 +527,7 @@
     }
     .import-file-input::file-selector-button:hover { background: rgba(0, 240, 255, 0.2); box-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
     .import-error { margin-top: 0.25rem; font-size: 0.875rem; color: #fca5a5; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
-    .import-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .import-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; width: 100%; }
     .import-btn {
         display: inline-flex;
         align-items: center;
