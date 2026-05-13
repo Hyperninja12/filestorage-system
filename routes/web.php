@@ -28,9 +28,24 @@ Route::middleware(['system.lock'])->group(function (): void {
 
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
-    Route::get('/module-two', function () {
-        return view('module-two.index');
-    })->name('module-two.index');
+    // File Inventory System Routes
+    Route::prefix('file-inventory')->name('file-inventory.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\FileInventoryController::class, 'index'])->name('index');
+        Route::get('/folder/{folder}', [\App\Http\Controllers\FileInventoryController::class, 'showFolder'])->name('folder');
+        
+        Route::post('/folders', [\App\Http\Controllers\FileInventoryController::class, 'createFolder'])->name('folders.store');
+        Route::put('/folders/{folder}', [\App\Http\Controllers\FileInventoryController::class, 'renameFolder'])->name('folders.update');
+        Route::put('/folders/{folder}/move', [\App\Http\Controllers\FileInventoryController::class, 'moveFolder'])->name('folders.move');
+        Route::delete('/folders/{folder}', [\App\Http\Controllers\FileInventoryController::class, 'deleteFolder'])->name('folders.destroy');
+        
+        Route::post('/upload', [\App\Http\Controllers\FileInventoryController::class, 'uploadFiles'])->name('upload');
+        Route::get('/files/{file}', [\App\Http\Controllers\FileInventoryController::class, 'showFile'])->name('files.show');
+        Route::get('/files/{file}/download', [\App\Http\Controllers\FileInventoryController::class, 'downloadFile'])->name('files.download');
+        Route::get('/files/{file}/preview', [\App\Http\Controllers\FileInventoryController::class, 'previewFile'])->name('files.preview');
+        Route::put('/files/{file}/rename', [\App\Http\Controllers\FileInventoryController::class, 'renameFile'])->name('files.rename');
+        Route::put('/files/{file}/move', [\App\Http\Controllers\FileInventoryController::class, 'moveFile'])->name('files.move');
+        Route::delete('/files/{file}', [\App\Http\Controllers\FileInventoryController::class, 'deleteFile'])->name('files.destroy');
+    });
 
     Route::get('/records', [RecordController::class, 'index'])->name('records.index');
     Route::get('/records/create', [RecordController::class, 'create'])->name('records.create');
